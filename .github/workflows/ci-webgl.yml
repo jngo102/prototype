@@ -2,9 +2,9 @@ name: WebGL Build & Deploy
 
 on:
  workflow_dispatch:
-#  push:
-#    branches:
-#      - main
+ push:
+   branches:
+     - deploy
 
 jobs:
   build:
