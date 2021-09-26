@@ -1,10 +1,10 @@
 name: WebGL Build & Deploy
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+#on:
+#  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
 
 jobs:
   build:
@@ -49,8 +49,8 @@ jobs:
           name: Build
           path: build
 
-      - name: Deploy Result
-        uses: JamesIves/github-pages-deploy-action@4.1.5
-        with:
-          branch: pages 
-          folder: build/WebGL/WebGL
+#      - name: Deploy Result
+#        uses: JamesIves/github-pages-deploy-action@4.1.5
+#        with:
+#          branch: pages 
+#          folder: build/WebGL/WebGL
