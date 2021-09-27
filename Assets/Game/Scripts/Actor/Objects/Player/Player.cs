@@ -25,6 +25,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private bool inputJump;
     private bool inputJumpDown;
     private bool inputAttackDown;
+    private bool inputLookUp;
+    private bool inputLookDown;
 
     // Timers
     private Timer jumpGraceTimer = new Timer(.05f);
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Vector2 recoilDirection;
     private float jumpWallDir;
     private Vector2 velocity;
+    private int lookAt;
 
 
 
@@ -78,6 +81,9 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             input.Player.Attack.performed += OnAttack;
             input.Player.Focus.performed += OnFocus;
             input.Player.Jump.performed += OnJump;
+
+            // input.Player.LookUp.performed += (x) => Debug.Log("LookUp! " + x.ReadValueAsButton() );
+            // input.Player.LookUp.canceled += (x) => Debug.Log("Canceled! " + x.ReadValueAsButton() );
         }
         else
         {
@@ -107,6 +113,23 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         var direction = input.Player.Direction.ReadValue<Vector2>();
         inputDirection.x = Mathf.Abs(direction.x) > 0.5f ? Mathf.Sign(direction.x) : 0;
         inputDirection.y = Mathf.Abs(direction.y) > 0.5f ? Mathf.Sign(direction.y) : 0;
+
+        if (velocity.sqrMagnitude < 0.01f)
+        {
+            if (input.Player.LookUp.triggered)
+                inputLookUp = true;
+
+            if (input.Player.LookDown.triggered)
+                inputLookDown = true;
+        }
+
+        if (input.Player.LookUp.phase != InputActionPhase.Performed)
+            inputLookUp = false;
+
+        if (input.Player.LookDown.phase != InputActionPhase.Performed)
+            inputLookDown = false;
+
+        lookAt = (inputLookUp ? +1 : 0) + (inputLookDown ? -1 : 0);
     }
 
     private void OnAttack(InputAction.CallbackContext ctx)
@@ -287,6 +310,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         SyncTimers();
         SyncRotation(finalDirection.x);
         SyncAnimator();
+        SyncCamera();
     }
 
     private string lastName = string.Empty;
@@ -354,6 +378,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         animator.SetBool("isRunning", velocity.x != 0.0f);
         animator.SetBool("isGrounded", body.collisions.below);
         animator.SetBool("isInvincible", invincibleTimer);
+        animator.SetInteger("vertLookAt", lookAt);
+    }
+
+    private void SyncCamera()
+    {
+        var camera = GetComponent<PlayerCameraController>();
+
+        camera.LookAt(lookAt);
     }
 
     public void SetPosition(Vector2 position)

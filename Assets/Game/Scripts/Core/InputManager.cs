@@ -57,6 +57,22 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)""
+                },
+                {
+                    ""name"": ""LookUp"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""cf11bf2b-5851-48fc-8e25-131ed0339520"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold""
+                },
+                {
+                    ""name"": ""LookDown"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""760c064d-49c2-4c67-a564-bc6c66494e0a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold""
                 }
             ],
             ""bindings"": [
@@ -376,6 +392,72 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c27db608-1b51-4d9c-9842-ef7360748710"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""LookUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ca632d4-bc9f-4253-b41c-5fe229c12584"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LookUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7abf1a8-ca02-4b77-a97d-db001ed9399e"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""LookUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6a8c2cd-e6df-4c56-911a-621722f05716"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""LookDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e444e17a-5da1-4b83-8ecf-74d1853f8c8b"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LookDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d35ad33-ad53-4f8e-bb84-ad95fa3fb360"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""LookDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -925,6 +1007,8 @@ public class @InputManager : IInputActionCollection, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Direction = m_Player.FindAction("Direction", throwIfNotFound: true);
         m_Player_Focus = m_Player.FindAction("Focus", throwIfNotFound: true);
+        m_Player_LookUp = m_Player.FindAction("LookUp", throwIfNotFound: true);
+        m_Player_LookDown = m_Player.FindAction("LookDown", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -991,6 +1075,8 @@ public class @InputManager : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Direction;
     private readonly InputAction m_Player_Focus;
+    private readonly InputAction m_Player_LookUp;
+    private readonly InputAction m_Player_LookDown;
     public struct PlayerActions
     {
         private @InputManager m_Wrapper;
@@ -1000,6 +1086,8 @@ public class @InputManager : IInputActionCollection, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Direction => m_Wrapper.m_Player_Direction;
         public InputAction @Focus => m_Wrapper.m_Player_Focus;
+        public InputAction @LookUp => m_Wrapper.m_Player_LookUp;
+        public InputAction @LookDown => m_Wrapper.m_Player_LookDown;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1024,6 +1112,12 @@ public class @InputManager : IInputActionCollection, IDisposable
                 @Focus.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFocus;
                 @Focus.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFocus;
                 @Focus.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFocus;
+                @LookUp.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookUp;
+                @LookUp.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookUp;
+                @LookUp.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookUp;
+                @LookDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
+                @LookDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
+                @LookDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1043,6 +1137,12 @@ public class @InputManager : IInputActionCollection, IDisposable
                 @Focus.started += instance.OnFocus;
                 @Focus.performed += instance.OnFocus;
                 @Focus.canceled += instance.OnFocus;
+                @LookUp.started += instance.OnLookUp;
+                @LookUp.performed += instance.OnLookUp;
+                @LookUp.canceled += instance.OnLookUp;
+                @LookDown.started += instance.OnLookDown;
+                @LookDown.performed += instance.OnLookDown;
+                @LookDown.canceled += instance.OnLookDown;
             }
         }
     }
@@ -1177,6 +1277,8 @@ public class @InputManager : IInputActionCollection, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnDirection(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
+        void OnLookUp(InputAction.CallbackContext context);
+        void OnLookDown(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

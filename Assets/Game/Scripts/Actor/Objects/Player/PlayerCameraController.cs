@@ -10,6 +10,7 @@ public class PlayerCameraController : MonoBehaviour
     private Player _player;
     private LevelBounds _bounds;
     private CameraShaker _shaker;
+    private float _offset;
 
     private Vector2 _cameraPosition;
     private float _cameraDefaultHLerpSpeed = 5;
@@ -23,12 +24,6 @@ public class PlayerCameraController : MonoBehaviour
     private void Start()
     {
         _shaker = CameraShaker.Instance;
-
-        // FIXME: Pass these value through method after level initialization
-        // Setup(Camera.main,
-        //     FindObjectOfType<Player>(),
-        //     FindObjectOfType<LevelBounds>()
-        // );
     }
 
     public void Setup(Camera camera, Player player, LevelBounds bounds)
@@ -53,6 +48,11 @@ public class PlayerCameraController : MonoBehaviour
         _shaker.ShakeOnce(1f, 2f, .1f, .1f);
     }
 
+    public void LookAt(int offset)
+    {
+        _offset = offset * 5;
+    }
+
     private void Update()
     {
         if (_camera == null)
@@ -69,6 +69,7 @@ public class PlayerCameraController : MonoBehaviour
 
         var targetPos = _player.transform.position;
         targetPos.y += 1.5f;
+        targetPos.y += _offset;
 
         // Lerp
         _cameraPosition.x = Mathf.Lerp(_cameraPosition.x, targetPos.x, _cameraDefaultHLerpSpeed * Time.deltaTime);
