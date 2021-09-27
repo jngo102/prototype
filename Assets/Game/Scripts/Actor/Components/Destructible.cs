@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Actor))]
-public class Destructible : MonoBehaviour, IDamageHandler
+public class Destructible : MonoBehaviour, IPreDamageHandler, IDamageHandler
 {
     float direction = 0;
     bool destroyed = false;
@@ -24,6 +24,11 @@ public class Destructible : MonoBehaviour, IDamageHandler
         spriteTransform = GetComponentInChildren<SpriteRenderer>().transform;
         eulerAngles = spriteTransform.eulerAngles;
         position = transform.position;
+    }
+
+    public void OnPreDamage(DamageInfo info)
+    {
+        info.Recoil = false;
     }
 
     public void OnDamage(DamageInfo info)

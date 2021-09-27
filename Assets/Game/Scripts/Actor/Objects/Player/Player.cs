@@ -404,11 +404,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     public void OnHit(DamageInfo info)
     {
-        recoilTimer.Start();
+        if (info.Recoil)
+        {
+            recoilTimer.Start();
 
-        if (inputDirection.y > 0) recoilDirection.y = -1;
-        else if (inputDirection.y < 0) recoilDirection.y = +1;
-        else recoilDirection.x = -heldTransform.localScale.x;
+            if (inputDirection.y > 0) recoilDirection.y = -1;
+            else if (inputDirection.y < 0) recoilDirection.y = +1;
+            else recoilDirection.x = -heldTransform.localScale.x;
+        }
     }
 
     public void OnPreDamage(DamageInfo info)
@@ -456,6 +459,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         }
 
         PlayerHealth.Instance.StartDrainingHealth(1);
-        // PlayerCameraController.Instance.Shake();
+        PlayerCameraController.Instance.Shake();
     }
 }
