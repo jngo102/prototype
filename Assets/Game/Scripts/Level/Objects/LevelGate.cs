@@ -311,5 +311,7 @@ public class LevelGate : MonoBehaviour
                 transform.localScale
             )
         );
+
+        Main.Hook.PlayerTransit.Invoke();
     }
 }

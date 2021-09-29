@@ -11,6 +11,7 @@ public class Main : MonoBehaviour
     public static LevelManager Level { get; private set; }
     public static GameManager Game { get; private set; }
     public static InputManager Input { get; private set; }
+    public static HookManager Hook { get; private set; }
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class Main : MonoBehaviour
         UI = GetComponent<UIManager>();
         Level = GetComponent<LevelManager>();
         Game = GetComponent<GameManager>();
+        Hook = new HookManager();
         Input = new InputManager();
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ActorBody))]
-public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractHander
+public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
     // Speeds & Boosts & Times
     const float gravity = -50f;
@@ -68,7 +68,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Bounds _lastGeometryBounds;
     private Bounds _lastPlayerBounds;
 
-    private InteractInfo _interaction;
+    private InteractionInfo _interaction;
 
 
 
@@ -515,9 +515,9 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     // Interact
     //
 
-    public void OnInteractionEnter(InteractInfo info) => _interaction = info;
+    public void OnInteractionEnter(InteractionInfo info) => _interaction = info;
 
-    public void OnInteractionTrigger(InteractInfo info) { }
+    public void OnInteractionTrigger(InteractionInfo info) { }
 
-    public void OnInteractionExit(InteractInfo info) => _interaction = null;
+    public void OnInteractionExit(InteractionInfo info) => _interaction = null;
 }

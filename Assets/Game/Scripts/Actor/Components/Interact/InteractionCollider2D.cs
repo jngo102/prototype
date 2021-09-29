@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class InteractCollider2D : MonoBehaviour
+public class InteractionCollider2D : MonoBehaviour
 {
     private static Collider2D[] _sTemp = new Collider2D[1];
 
@@ -13,7 +13,7 @@ public class InteractCollider2D : MonoBehaviour
     private ContactFilter2D _filter;
     private Actor _source;
 
-    private InteractInfo _info;
+    private InteractionInfo _info;
 
     private List<Collider2D> _overlapped;
 
@@ -44,7 +44,7 @@ public class InteractCollider2D : MonoBehaviour
             var target = GetActorOrNull(collider);
             if (target != null)
             {
-                _info = new InteractInfo(_source, target);
+                _info = new InteractionInfo(_source, target);
                 _info.Enter();
             }
         }

@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         Main.Input.Player.Menu.performed += OnMenu;
+
+        Main.Hook.PlayerTransit += () => Debug.Log("Transit");
     }
 
     //
