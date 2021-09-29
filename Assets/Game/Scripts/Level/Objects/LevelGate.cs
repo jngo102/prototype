@@ -282,7 +282,7 @@ public class LevelGate : MonoBehaviour
 
                 break;
             case Side.Top:
-                offset = Vector2.down;
+                offset = 2 * Vector2.down;
                 direction = Mathf.Sign(message.GateOffset.x);
                 break;
             case Side.Bottom:
