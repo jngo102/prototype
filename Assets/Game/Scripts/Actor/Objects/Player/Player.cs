@@ -81,9 +81,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             input.Player.Attack.performed += OnAttack;
             input.Player.Focus.performed += OnFocus;
             input.Player.Jump.performed += OnJump;
-
-            // input.Player.LookUp.performed += (x) => Debug.Log("LookUp! " + x.ReadValueAsButton() );
-            // input.Player.LookUp.canceled += (x) => Debug.Log("Canceled! " + x.ReadValueAsButton() );
         }
         else
         {
@@ -217,8 +214,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
             forceDirection.x = jumpWallDir;
             forceDirection.y = 0;
-            forceDirectionTimer.time = .25f;
-            forceDirectionTimer.Start();
+            forceDirectionTimer.Start(.25f);
         }
 
         if (jumpVarTimer)
@@ -396,6 +392,9 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         transform.position = position;
         Physics2D.SyncTransforms();
 
+        forceDirectionTimer.Start(invincibleTimer.time * 2/3);
+        forceDirection = Vector2.zero;
+
         GetComponent<PlayerCameraController>().Setup(
             Camera.main,
             this,
@@ -418,7 +417,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     {
         var deltaX = platform.center.x - player.center.x;
         var baseX = deltaX > 0 ? platform.min.x : platform.max.x;
-        var offsetX = Mathf.Sign(deltaX) * (player.extents.x + 0.5f);
+        var offsetX = Mathf.Sign(deltaX) * (player.extents.x + 1f);
 
         var baseY = platform.max.y;
         var offsetY = player.extents.y;
