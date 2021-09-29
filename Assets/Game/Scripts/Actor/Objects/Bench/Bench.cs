@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bench : MonoBehaviour, IInteractEnterHander, IInteractTriggerHandler, IInteractExitHander
+public class Bench : MonoBehaviour, IInteractHander
 {
     [SerializeField]
     private Animator _label;
@@ -10,14 +10,13 @@ public class Bench : MonoBehaviour, IInteractEnterHander, IInteractTriggerHandle
         _label.SetTrigger("Show");
     }
 
-    public void OnInteractionTrigger(InteractInfo info)
-    {
-        // ................
-        Debug.Log("Interact!");
-    }
-
     public void OnInteractionExit(InteractInfo info)
     {
         _label.SetTrigger("Hide");
+    }
+
+    public void OnInteractionTrigger(InteractInfo info)
+    {
+        PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 }

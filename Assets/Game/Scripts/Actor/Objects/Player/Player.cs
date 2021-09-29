@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ActorBody))]
-public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler
+public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractHander
 {
     // Speeds & Boosts & Times
     const float gravity = -50f;
@@ -68,6 +68,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Bounds _lastGeometryBounds;
     private Bounds _lastPlayerBounds;
 
+    private InteractInfo _interaction;
+
 
 
     #region Initialize
@@ -81,6 +83,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             input.Player.Attack.performed += OnAttack;
             input.Player.Focus.performed += OnFocus;
             input.Player.Jump.performed += OnJump;
+            input.Player.Trigger.performed += OnTrigger;
         }
         else
         {
@@ -98,6 +101,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             input.Player.Attack.performed -= OnAttack;
             input.Player.Focus.performed -= OnFocus;
             input.Player.Jump.performed -= OnJump;
+            input.Player.Trigger.performed -= OnTrigger;
         }
     }
 
@@ -146,6 +150,12 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             PlayerHealth.Instance.StartRestoringHealth(1);
         else
             PlayerHealth.Instance.StopRestoringHealth();
+    }
+
+    private void OnTrigger(InputAction.CallbackContext ctx)
+    {
+        if (_interaction != null)
+            _interaction.Trigger();
     }
 
     #endregion
@@ -492,4 +502,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         PlayerHealth.Instance.StartDrainingHealth(1);
         PlayerCameraController.Instance.Shake();
     }
+
+    //
+    // Interact
+    //
+
+    public void OnInteractionEnter(InteractInfo info) => _interaction = info;
+
+    public void OnInteractionTrigger(InteractInfo info) { }
+
+    public void OnInteractionExit(InteractInfo info) => _interaction = null;
 }

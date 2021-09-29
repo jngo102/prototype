@@ -73,6 +73,14 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Hold""
+                },
+                {
+                    ""name"": ""Trigger"",
+                    ""type"": ""Button"",
+                    ""id"": ""43ee8c50-203d-48af-9ee9-4c554a7b802d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Tap""
                 }
             ],
             ""bindings"": [
@@ -458,6 +466,39 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""LookDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37a65240-0545-41ee-94a1-e78470ac5176"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Trigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7f0b5d8-6f0f-4ea0-9d90-22341b2972fb"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Trigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09581a54-e14d-4d48-9221-1925164447b0"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Trigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1009,6 +1050,7 @@ public class @InputManager : IInputActionCollection, IDisposable
         m_Player_Focus = m_Player.FindAction("Focus", throwIfNotFound: true);
         m_Player_LookUp = m_Player.FindAction("LookUp", throwIfNotFound: true);
         m_Player_LookDown = m_Player.FindAction("LookDown", throwIfNotFound: true);
+        m_Player_Trigger = m_Player.FindAction("Trigger", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1077,6 +1119,7 @@ public class @InputManager : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Focus;
     private readonly InputAction m_Player_LookUp;
     private readonly InputAction m_Player_LookDown;
+    private readonly InputAction m_Player_Trigger;
     public struct PlayerActions
     {
         private @InputManager m_Wrapper;
@@ -1088,6 +1131,7 @@ public class @InputManager : IInputActionCollection, IDisposable
         public InputAction @Focus => m_Wrapper.m_Player_Focus;
         public InputAction @LookUp => m_Wrapper.m_Player_LookUp;
         public InputAction @LookDown => m_Wrapper.m_Player_LookDown;
+        public InputAction @Trigger => m_Wrapper.m_Player_Trigger;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1118,6 +1162,9 @@ public class @InputManager : IInputActionCollection, IDisposable
                 @LookDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
                 @LookDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
                 @LookDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLookDown;
+                @Trigger.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTrigger;
+                @Trigger.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTrigger;
+                @Trigger.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTrigger;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1143,6 +1190,9 @@ public class @InputManager : IInputActionCollection, IDisposable
                 @LookDown.started += instance.OnLookDown;
                 @LookDown.performed += instance.OnLookDown;
                 @LookDown.canceled += instance.OnLookDown;
+                @Trigger.started += instance.OnTrigger;
+                @Trigger.performed += instance.OnTrigger;
+                @Trigger.canceled += instance.OnTrigger;
             }
         }
     }
@@ -1279,6 +1329,7 @@ public class @InputManager : IInputActionCollection, IDisposable
         void OnFocus(InputAction.CallbackContext context);
         void OnLookUp(InputAction.CallbackContext context);
         void OnLookDown(InputAction.CallbackContext context);
+        void OnTrigger(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
