@@ -17,6 +17,9 @@ public class Bench : MonoBehaviour, IInteractHander
 
     public void OnInteractionTrigger(InteractInfo info)
     {
-        PlayerHealth.Instance.InstantlyRestoreAllHealth();
+        SendMessageUpwards(
+            PlayerSaveMessage.Name,
+            new PlayerSaveMessage()
+        );
     }
 }

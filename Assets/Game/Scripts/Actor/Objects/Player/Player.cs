@@ -305,6 +305,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private void UpdateHealth()
     {
         PlayerHealth.Instance.Update(Time.deltaTime);
+
+        if (PlayerHealth.Instance.NoHealth)
+        {
+            FindObjectOfType<LevelMessageBus>().SendMessage(
+                PlayerDeathMessage.Name,
+                new PlayerDeathMessage()
+            );
+        }
     }
 
     #endregion
@@ -474,8 +482,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
                                 - Vector2.up * body.collider.offset.y;
 
             FindObjectOfType<LevelMessageBus>().SendMessage(
-                RestoreMessage.Name,
-                new RestoreMessage(
+                PlayerRecoveryMessage.Name,
+                new PlayerRecoveryMessage(
                     restorePosition
                 )
             );

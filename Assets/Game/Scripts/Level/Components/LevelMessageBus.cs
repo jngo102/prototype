@@ -9,6 +9,12 @@ public class LevelMessageBus : MonoBehaviour
     private void OnLevelTransitionMessage(LevelTransitionMessage message)
         => Listener.SendMessage(LevelTransitionMessage.Name, message);
 
-    private void OnRestoreMessage(RestoreMessage message)
-        => Listener.SendMessage(RestoreMessage.Name, message);
+    private void OnPlayerRecoveryMessage(PlayerRecoveryMessage message)
+        => Listener.SendMessage(PlayerRecoveryMessage.Name, message);
+
+    private void OnPlayerSaveMessage(PlayerSaveMessage message)
+        => Listener.SendMessage(PlayerSaveMessage.Name, message);
+
+    private void OnPlayerDeathMessage(PlayerDeathMessage message)
+        => Listener.SendMessage(PlayerDeathMessage.Name, message);
 }

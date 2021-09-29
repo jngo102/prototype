@@ -33,20 +33,23 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    private void OnRestoreMessage(RestoreMessage message)
-    {
-        StartCoroutine(OnRestoreMessageCoroutine(message));
-    }
-
-    private IEnumerator OnRestoreMessageCoroutine(RestoreMessage message)
+    private void OnPlayerRecoveryMessage(PlayerRecoveryMessage message) => StartCoroutine(OnRestoreMessageCoroutine(message));
+    private IEnumerator OnRestoreMessageCoroutine(PlayerRecoveryMessage message)
     {
         yield return Main.UI.Get<UICurtain>().ShowAndWait();
-
         FindObjectOfType<Player>().SetPosition(message.Position);
-
         yield return Main.UI.Get<UICurtain>().HideAndWait();
+    }
 
-        yield break;
+    private void OnPlayerDeathMessage(PlayerDeathMessage message)
+    {
+        Debug.Log("Process DEATH");
+    }
+
+    private void OnPlayerSaveMessage(PlayerSaveMessage message)
+    {
+        Debug.Log("Process SAVE");
+        PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
     private void OnMenu(InputAction.CallbackContext context)
