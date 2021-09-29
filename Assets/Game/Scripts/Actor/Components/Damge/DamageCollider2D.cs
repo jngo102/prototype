@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Collider2DHitter : MonoBehaviour
+public class DamageCollider2D : MonoBehaviour
 {
     private static Collider2D[] _sTemp = new Collider2D[4];
     private static List<Collider2D> _sTempList = new List<Collider2D>();
