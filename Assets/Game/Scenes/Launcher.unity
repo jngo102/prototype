@@ -5466,16 +5466,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Debug: 1
   m_Textures:
-  - m_Name: Back2
-    m_Format: 0
-    m_Scale: 2
-    m_Depth: 0
-    m_MipMaps: 1
-  - m_Name: Back1
-    m_Format: 0
-    m_Scale: 1
-    m_Depth: 0
-    m_MipMaps: 1
   - m_Name: Default
     m_Format: 0
     m_Scale: 1
@@ -5487,26 +5477,6 @@ MonoBehaviour:
     m_Depth: 0
     m_MipMaps: 1
   m_Cameras:
-  - m_TextureName: Back2
-    m_Culling:
-      serializedVersion: 2
-      m_Bits: 2048
-    m_ClippingFrom: 0
-    m_ClippingTo: 1000
-    m_ColorClear: 1
-    m_Color: {r: 0, g: 0, b: 0, a: 0}
-    m_Raycaster: 0
-    m_Canvases: []
-  - m_TextureName: Back1
-    m_Culling:
-      serializedVersion: 2
-      m_Bits: 134218752
-    m_ClippingFrom: 0
-    m_ClippingTo: 1000
-    m_ColorClear: 1
-    m_Color: {r: 0, g: 0, b: 0, a: 0}
-    m_Raycaster: 0
-    m_Canvases: []
   - m_TextureName: UI
     m_Culling:
       serializedVersion: 2
@@ -5521,38 +5491,14 @@ MonoBehaviour:
   - m_TextureName: Default
     m_Culling:
       serializedVersion: 2
-      m_Bits: 67108864
+      m_Bits: 469766111
     m_ClippingFrom: 0
     m_ClippingTo: 1000
     m_ColorClear: 1
-    m_Color: {r: 0, g: 0, b: 0, a: 0}
-    m_Raycaster: 0
-    m_Canvases: []
-  - m_TextureName: Default
-    m_Culling:
-      serializedVersion: 2
-      m_Bits: 1023
-    m_ClippingFrom: 0
-    m_ClippingTo: 1000
-    m_ColorClear: 0
-    m_Color: {r: 0, g: 0, b: 0, a: 0}
-    m_Raycaster: 0
-    m_Canvases: []
-  - m_TextureName: Default
-    m_Culling:
-      serializedVersion: 2
-      m_Bits: 268435456
-    m_ClippingFrom: 0
-    m_ClippingTo: 1000
-    m_ColorClear: 0
-    m_Color: {r: 0, g: 0, b: 0, a: 0}
+    m_Color: {r: 0.2784314, g: 0.2784314, b: 0.2784314, a: 1}
     m_Raycaster: 0
     m_Canvases: []
   m_Images:
-  - m_TextureName: Back2
-    m_Material: {fileID: 2100000, guid: fcaaef6af01494db69cb14746cc35496, type: 2}
-  - m_TextureName: Back1
-    m_Material: {fileID: 2100000, guid: e27c1ea000aa740d2af60ea8cbcf68e7, type: 2}
   - m_TextureName: Default
     m_Material: {fileID: 0}
   - m_TextureName: UI
