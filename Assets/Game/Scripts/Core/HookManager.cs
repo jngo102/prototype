@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class HookManager
 {
-    public Hook PlayerTransit;
+    public Hook<PlayerTransitArgs> PlayerTransit;
+    public Hook<PlayerRecoveryArgs> PlayerRecovery;
     public Hook PlayerDeath;
     public Hook PlayerSave;
-    public Hook PlayerRecovery;
 }
 
 public struct Hook

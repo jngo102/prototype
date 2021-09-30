@@ -260,7 +260,7 @@ public class LevelGate : MonoBehaviour
 
     #endregion
     
-    public void Place(Player player, LevelTransitionMessage message)
+    public void Place(Player player, PlayerTransitArgs message)
     {
         var offset = Vector2.zero;
         var direction = 0f;
@@ -302,16 +302,13 @@ public class LevelGate : MonoBehaviour
         if (player == null)
             return;
 
-        SendMessageUpwards(
-            LevelTransitionMessage.Name,
-            new LevelTransitionMessage(
+        Main.Hook.PlayerTransit.Invoke(
+            new PlayerTransitArgs(
                 _level,
                 _gate,
                 player.transform.position - transform.position,
                 transform.localScale
             )
         );
-
-        Main.Hook.PlayerTransit.Invoke();
     }
 }

@@ -308,10 +308,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
         if (PlayerHealth.Instance.NoHealth)
         {
-            FindObjectOfType<LevelMessageBus>().SendMessage(
-                PlayerDeathMessage.Name,
-                new PlayerDeathMessage()
-            );
+            Main.Hook.PlayerDeath.Invoke();
         }
     }
 
@@ -481,9 +478,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             var restorePosition = GetRestorePosition(_lastGeometryBounds, _lastPlayerBounds)
                                 - Vector2.up * body.collider.offset.y;
 
-            FindObjectOfType<LevelMessageBus>().SendMessage(
-                PlayerRecoveryMessage.Name,
-                new PlayerRecoveryMessage(
+            Main.Hook.PlayerRecovery.Invoke(
+                new PlayerRecoveryArgs(
                     restorePosition
                 )
             );

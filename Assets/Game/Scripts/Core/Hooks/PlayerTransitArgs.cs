@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class LevelTransitionMessage
+public class PlayerTransitArgs
 {
-    public const string Name = "On" + nameof(LevelTransitionMessage);
+    public const string Name = "On" + nameof(PlayerTransitArgs);
 
     public string Level { get; }
     public string Gate { get; }
@@ -10,7 +10,7 @@ public class LevelTransitionMessage
     public Vector2 GateOffset { get; }
     public Vector2 GateSize { get; }
 
-    public LevelTransitionMessage(string level, string gate, Vector2 offset, Vector2 size)
+    public PlayerTransitArgs(string level, string gate, Vector2 offset, Vector2 size)
     {
         Level = level;
         Gate = gate;

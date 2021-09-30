@@ -17,9 +17,6 @@ public class Bench : MonoBehaviour, IInteractionHander
 
     public void OnInteractionTrigger(InteractionInfo info)
     {
-        SendMessageUpwards(
-            PlayerSaveMessage.Name,
-            new PlayerSaveMessage()
-        );
+        Main.Hook.PlayerSave.Invoke();
     }
 }

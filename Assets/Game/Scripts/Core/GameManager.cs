@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     {
         Main.Input.Player.Menu.performed += OnMenu;
 
-        Main.Hook.PlayerTransit += () => Debug.Log("Transit");
+        Main.Hook.PlayerDeath += OnPlayerDeath;
+        Main.Hook.PlayerRecovery += OnPlayerRecovery;
+        Main.Hook.PlayerSave += OnPlayerSave;
+        Main.Hook.PlayerTransit += OnPlayerTransit;
     }
 
     //
@@ -27,7 +30,7 @@ public class GameManager : MonoBehaviour
     // Message Handlers
     //
 
-    private void OnLevelTransitionMessage(LevelTransitionMessage message)
+    private void OnPlayerTransit(PlayerTransitArgs message)
     {
         Open(new OpenArgs() {
             name = message.Level,
@@ -35,22 +38,22 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    private void OnPlayerRecoveryMessage(PlayerRecoveryMessage message) => StartCoroutine(OnRestoreMessageCoroutine(message));
-    private IEnumerator OnRestoreMessageCoroutine(PlayerRecoveryMessage message)
+    private void OnPlayerRecovery(PlayerRecoveryArgs message) => StartCoroutine(OnRestoreMessageCoroutine(message));
+    private IEnumerator OnRestoreMessageCoroutine(PlayerRecoveryArgs message)
     {
         yield return Main.UI.Get<UICurtain>().ShowAndWait();
         FindObjectOfType<Player>().SetPosition(message.Position);
         yield return Main.UI.Get<UICurtain>().HideAndWait();
     }
 
-    private void OnPlayerDeathMessage(PlayerDeathMessage message)
+    private void OnPlayerDeath()
     {
-        Debug.Log("Process DEATH");
+        Debug.Log("OnPlayerDeath()");
     }
 
-    private void OnPlayerSaveMessage(PlayerSaveMessage message)
+    private void OnPlayerSave()
     {
-        Debug.Log("Process SAVE");
+        Debug.Log("OnPlayerSave()");
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
@@ -72,7 +75,6 @@ public class GameManager : MonoBehaviour
         yield return Main.Level.Load(options.name);
 
         // ... initialize level ...
-        FindObjectOfType<LevelMessageBus>().Listener = this;
 
         // ... initialize player ...
         if (options.transition != null)
@@ -103,7 +105,7 @@ public class GameManager : MonoBehaviour
     {
         public string name;
 
-        public LevelTransitionMessage transition;
+        public PlayerTransitArgs transition;
     }
 
     private void Close() => StartCoroutine(CloseCoroutine());
