@@ -69,6 +69,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Bounds _lastPlayerBounds;
 
     private InteractionInfo _interaction;
+    private bool _freeze;
 
 
 
@@ -114,6 +115,10 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         var direction = input.Player.Direction.ReadValue<Vector2>();
         inputDirection.x = Mathf.Abs(direction.x) > 0.5f ? Mathf.Sign(direction.x) : 0;
         inputDirection.y = Mathf.Abs(direction.y) > 0.5f ? Mathf.Sign(direction.y) : 0;
+
+        // var hasInput = velocity.sqrMagnitude > 0.01f
+                    // || inputAttackDown
+                    // || inputJumpDown;
 
         if (velocity.sqrMagnitude < 0.01f)
         {
@@ -304,12 +309,12 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     private void UpdateHealth()
     {
+        var noHealth = PlayerHealth.Instance.NoHealth;
+
         PlayerHealth.Instance.Update(Time.deltaTime);
 
-        if (PlayerHealth.Instance.NoHealth)
-        {
+        if (noHealth != PlayerHealth.Instance.NoHealth)
             Main.Hook.PlayerDeath.Invoke();
-        }
     }
 
     #endregion
@@ -443,7 +448,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         );
     }
 
-
     //
     // Hit & Damage
     //
@@ -469,8 +473,16 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     public void OnDamage(DamageInfo info)
     {
         invincibleTimer.Start();
+        PlayerHealth.Instance.InstantlyDrainHealth(1);
+        PlayerCameraController.Instance.Shake();
 
-        if (info.Type == DamageType.Spikes)
+        if (PlayerHealth.Instance.NoHealth)
+        {
+            recoilTimer.Start();
+            recoilDirection = Vector2.zero;
+            Main.Hook.PlayerDeath.Invoke();
+        }
+        else if (info.Type == DamageType.Spikes)
         {
             recoilTimer.Start();
             recoilDirection = Vector2.zero;
@@ -502,9 +514,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             recoilTimer.Start();
             recoilDirection = delta;
         }
-
-        PlayerHealth.Instance.StartDrainingHealth(1);
-        PlayerCameraController.Instance.Shake();
     }
 
     //

@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    public string Name => _name;
+    
     private AsyncOperation _async;
     private string _name;
 

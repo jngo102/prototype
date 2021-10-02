@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    private string _saveLevel;
+    private Vector2 _savePoint;
+
     public void Start()
     {
         Main.Input.Player.Menu.performed += OnMenu;
@@ -48,12 +51,17 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
-        Debug.Log("OnPlayerDeath()");
+        // Remove!
+        Open(new OpenArgs() {
+            name = _saveLevel,
+            death = true
+        });
     }
 
     private void OnPlayerSave()
     {
-        Debug.Log("OnPlayerSave()");
+        _saveLevel = Main.Level.Name;
+        _savePoint = FindObjectOfType<Player>().transform.position;
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
@@ -88,6 +96,11 @@ public class GameManager : MonoBehaviour
                 options.transition
             );
         }
+        else if (options.death)
+        {
+            PlayerHealth.Instance.InstantlyRestoreAllHealth();
+            FindObjectOfType<Player>().SetPosition(_savePoint);
+        }
 
         FindObjectOfType<PlayerCameraController>().Setup(
             Camera.main,
@@ -106,6 +119,7 @@ public class GameManager : MonoBehaviour
         public string name;
 
         public PlayerTransitArgs transition;
+        public bool death;
     }
 
     private void Close() => StartCoroutine(CloseCoroutine());
