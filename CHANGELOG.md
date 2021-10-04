@@ -3,7 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [Unreleased] - "Life & Death"
+## [Unreleased] - ""
+
+## [0.0.2a] - "Life & Death"
+
+### Added
+- Henceforth you are able to take others life but also lose yours
+- Save your eternal soul on benches
+- Look Up & Down
 
 ## [0.0.2a] - "Recoil"
 
