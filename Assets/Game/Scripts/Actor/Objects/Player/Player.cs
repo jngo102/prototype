@@ -6,15 +6,30 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
     // Speeds & Boosts & Times
-    const float gravity = -50f;
+    const float gravity = -80;
     const float moveSpeed = 6f;
-    const float jumpSpeed = 8f;
+    private float jumpSpeed = GetVelocity(gravity, jumpTimer, 3);
     const float jumpHBoost = 0.5f;
     const float jumpWallHBoost = 5f;
     const float fallMaxSpeed = -15f;
     const float fallMaxSpeedClinging = -5f;
     const float recoilHSpeed = 12f;
-    const float recoilVSpeed = 8f;
+    private float recoilVSpeed = GetVelocity(gravity, jumpTimer, 2);
+
+    const float jumpTimer = 0.1f;
+
+    private static float GetVelocity(float g, float jumpTime, float jumpHeight)
+    {
+        var a = 1 / (2 * Mathf.Abs(g));
+        var b = jumpTime;
+        var c = -jumpHeight;
+
+        var d = b*b - 4*a*c;
+        Debug.Assert(d > 0);
+
+        var x1 = (-b + Mathf.Sqrt(d)) / (2 * a);
+        return x1;
+    }
 
     [SerializeField] private float attackCooldownTime;
     [SerializeField] private float attackTime;
@@ -31,14 +46,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     // Timers
     private Timer jumpGraceTimer = new Timer(.05f);
     private Timer jumpWallGraceTimer = new Timer(.05f);
-    private Timer jumpVarTimer = new Timer(.3f);
+    private Timer jumpVarTimer = new Timer(jumpTimer);
     private Timer jumpCoyoteTimer = new Timer(.05f);
     private Timer forceDirectionTimer = new Timer();
 
     private Timer attackCooldownTimer = new Timer();
     private Timer attackTimer = new Timer();
 
-    private Timer recoilTimer = new Timer(.1f);
+    private Timer recoilTimer = new Timer(jumpTimer);
     private Timer invincibleTimer = new Timer(0.85f);
 
     // State
@@ -171,11 +186,11 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     private void OnFocus(InputAction.CallbackContext ctx)
     {
-        var focusing = ctx.ReadValueAsButton();
-        if (focusing)
-            PlayerHealth.Instance.StartRestoringHealth(1);
-        else
-            PlayerHealth.Instance.StopRestoringHealth();
+        // var focusing = ctx.ReadValueAsButton();
+        // if (focusing)
+        //     PlayerHealth.Instance.StartRestoringHealth(1);
+        // else
+        //     PlayerHealth.Instance.StopRestoringHealth();
     }
 
     private void OnTrigger(InputAction.CallbackContext ctx)
