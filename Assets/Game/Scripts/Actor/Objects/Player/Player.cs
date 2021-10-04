@@ -316,7 +316,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
                 var weaponTransformAngle = 0;
                 if (inputDirection.y > 0) weaponTransformAngle = 90;
-                else if (inputDirection.y < 0) weaponTransformAngle = -90;
+                else if (inputDirection.y < 0 && !body.collisions.below) weaponTransformAngle = -90;
 
                 weaponTransform.localRotation = Quaternion.Euler(0, 0, weaponTransformAngle);
                 weaponTransform.gameObject.SetActive(true);
