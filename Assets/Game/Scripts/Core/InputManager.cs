@@ -80,7 +80,7 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""id"": ""43ee8c50-203d-48af-9ee9-4c554a7b802d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Tap""
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [

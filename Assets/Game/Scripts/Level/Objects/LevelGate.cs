@@ -200,7 +200,12 @@ public class LevelGate : MonoBehaviour
         result.Add("<None>", string.Empty);
 
         if (_gate != string.Empty && names.Contains(_gate) == false)
-            result.Add(_gate, _gate);
+        {
+            if (HasScene())
+                result.Add("<" + _gate + ">", _gate);
+            else 
+                result.Add(_gate, _gate);
+        }
 
         foreach (var name in names)
             result.Add(name, name);
@@ -291,8 +296,7 @@ public class LevelGate : MonoBehaviour
                 break;
         }
 
-        player.transform.position = transform.position + (Vector3)offset;
-        player.SyncRotation(direction);
+        player.Setup(transform.position + (Vector3)offset);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

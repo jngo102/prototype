@@ -48,6 +48,16 @@ public class PlayerCameraController : MonoBehaviour
         _shaker.ShakeOnce(1f, 2f, .1f, .1f);
     }
 
+    public void Instant()
+    {
+        if (_player != null)
+        {
+            _cameraPosition = _player.transform.position;
+            _cameraPosition.y += 1.5f;
+            _cameraPosition.y += _offset;
+        }
+    }
+
     public void LookAt(int offset)
     {
         _offset = offset * 5;

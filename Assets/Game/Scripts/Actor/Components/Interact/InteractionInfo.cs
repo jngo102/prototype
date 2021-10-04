@@ -20,6 +20,9 @@ public class InteractionInfo
     public Actor Source { get; }
     public Actor Target { get; }
 
+    public InteractionType Type { get; set; }
+    public Vector2 BenchPoint;
+
     public InteractionInfo(Actor source, Actor target)
     {
         Debug.Assert(source != null);

@@ -49,6 +49,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Vector2 velocity;
     private int lookAt;
 
+    private bool isOnBench;
+
 
 
 
@@ -67,9 +69,10 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     private Bounds _lastGeometryBounds;
     private Bounds _lastPlayerBounds;
+    private string _lastGeometryName = string.Empty;
+
 
     private InteractionInfo _interaction;
-    private bool _freeze;
 
 
 
@@ -116,6 +119,24 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         inputDirection.x = Mathf.Abs(direction.x) > 0.5f ? Mathf.Sign(direction.x) : 0;
         inputDirection.y = Mathf.Abs(direction.y) > 0.5f ? Mathf.Sign(direction.y) : 0;
 
+        if (_interaction != null)
+        {
+            if (isOnBench)
+            {
+                if (inputAttackDown || inputJumpDown || inputDirection.x != 0 || input.Player.Trigger.triggered)
+                {
+                    _interaction.Trigger();
+                }
+            }
+            else
+            {
+                if (input.Player.Trigger.triggered)
+                {
+                    _interaction.Trigger();
+                }
+            }
+        }
+
         // var hasInput = velocity.sqrMagnitude > 0.01f
                     // || inputAttackDown
                     // || inputJumpDown;
@@ -159,8 +180,13 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     private void OnTrigger(InputAction.CallbackContext ctx)
     {
-        if (_interaction != null)
-            _interaction.Trigger();
+        // if (_interaction != null)
+        // {
+            // if (_interaction.State == InteractionState.Possible)
+                // _interaction.Activate();
+            // else if (_interaction.State == InteractionState.Active)
+                // _interaction.Deactivate();
+        // }
     }
 
     #endregion
@@ -322,14 +348,12 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private void LateUpdate()
     {
         ProcessSpikes();
-        
+
         SyncTimers();
         SyncRotation(finalDirection.x);
         SyncAnimator();
         SyncCamera();
     }
-
-    private string lastName = string.Empty;
 
     private void ProcessSpikes()
     {
@@ -339,10 +363,10 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             var geometry = collider.GetComponent<LevelGeometry>();
             if (geometry != null && geometry.Type == LevelGeometry.GeometryType.Solid)
             {
-                if (lastName != geometry.name)
+                if (_lastGeometryName != geometry.name)
                 {
-                    lastName = geometry.name;
-                    Debug.Log("LastPosition = " + lastName);
+                    _lastGeometryName = geometry.name;
+                    Debug.Log("LastPosition = " + _lastGeometryName);
                 }
 
                 _lastGeometryBounds = geometry.Bounds;
@@ -352,7 +376,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         }
     }
 
-    public void SyncTimers()
+    private void SyncTimers()
     {
         forceDirectionTimer.Update();
 
@@ -368,7 +392,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         attackTimer.Update();
     }
 
-    public void SyncRotation(float direction = 0)
+    private void SyncRotation(float direction = 0)
     {
         var currDir = Sign(heldTransform.lossyScale.x);
         var nextDir = Sign(direction);
@@ -394,32 +418,37 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         animator.SetBool("isRunning", velocity.x != 0.0f);
         animator.SetBool("isGrounded", body.collisions.below);
         animator.SetBool("isInvincible", invincibleTimer);
+        animator.SetBool("isOnBench", isOnBench);
         animator.SetInteger("vertLookAt", lookAt);
     }
 
     private void SyncCamera()
     {
-        var camera = GetComponent<PlayerCameraController>();
-
-        camera.LookAt(lookAt);
+        GetComponent<PlayerCameraController>().LookAt(lookAt);
     }
 
-    public void SetPosition(Vector2 position)
+    //
+    // Public API
+    //
+
+    public void Setup(Vector2 position, float direction = 0, bool force = false, bool isOnBench = false)
     {
         animator.Play("idle");
-
+        
         velocity = Vector2.zero;
         transform.position = position;
         Physics2D.SyncTransforms();
 
-        forceDirectionTimer.Start(invincibleTimer.time * 2/3);
-        forceDirection = Vector2.zero;
+        this.isOnBench = isOnBench;
 
-        GetComponent<PlayerCameraController>().Setup(
-            Camera.main,
-            this,
-            FindObjectOfType<LevelBounds>()
-        );
+        if (force)
+        {
+            forceDirectionTimer.Start(invincibleTimer.time * 2/3);
+            forceDirection = Vector2.zero;
+        }
+
+        GetComponent<PlayerCameraController>().Instant();
+        SyncRotation(direction);
     }
 
     //
@@ -437,7 +466,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     {
         var deltaX = platform.center.x - player.center.x;
         var baseX = deltaX > 0 ? platform.min.x : platform.max.x;
-        var offsetX = Mathf.Sign(deltaX) * (player.extents.x + 1f);
+        var offsetX = Mathf.Sign(deltaX) * (player.extents.x + 0.5f);
 
         var baseY = platform.max.y;
         var offsetY = player.extents.y;
@@ -487,29 +516,20 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             recoilTimer.Start();
             recoilDirection = Vector2.zero;
 
-            var restorePosition = GetRestorePosition(_lastGeometryBounds, _lastPlayerBounds)
-                                - Vector2.up * body.collider.offset.y;
-
             Main.Hook.PlayerRecovery.Invoke(
                 new PlayerRecoveryArgs(
-                    restorePosition
+                    GetRestorePosition(_lastGeometryBounds, _lastPlayerBounds)
+                    - Vector2.up * body.collider.offset.y
                 )
             );
         }
         else
         {
             var delta = info.Target.transform.position - info.Source.transform.position;
-            var deltaIsHorizontal = Mathf.Abs(delta.x) > Mathf.Abs(delta.y);
-            if (deltaIsHorizontal || body.collisions.below)
-            {
-                delta.x = Sign(delta.x);
-                delta.y = 0;
-            }
-            else 
-            {
-                delta.x = 0;
-                delta.y = Sign(delta.y);
-            }
+
+            var horizontal = body.collisions.below || Mathf.Abs(delta.x) > Mathf.Abs(delta.y);
+            delta.x = horizontal ? Sign(delta.x) : 0;
+            delta.y = horizontal ? 0 : Sign(delta.y);
 
             recoilTimer.Start();
             recoilDirection = delta;
@@ -520,9 +540,18 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     // Interact
     //
 
-    public void OnInteractionEnter(InteractionInfo info) => _interaction = info;
+    public void OnInteractionEnter(InteractionInfo info)
+    {
+        _interaction = info;
+    }
 
-    public void OnInteractionTrigger(InteractionInfo info) { }
+    public void OnInteractionTrigger(InteractionInfo info)
+    {
+        isOnBench = !isOnBench;
+    }
 
-    public void OnInteractionExit(InteractionInfo info) => _interaction = null;
+    public void OnInteractionExit(InteractionInfo info)
+    {
+        _interaction = null;
+    }
 }

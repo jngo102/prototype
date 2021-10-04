@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator OnRestoreMessageCoroutine(PlayerRecoveryArgs message)
     {
         yield return Main.UI.Get<UICurtain>().ShowAndWait();
-        FindObjectOfType<Player>().SetPosition(message.Position);
+        FindObjectOfType<Player>().Setup(message.Position, 0, true);
         yield return Main.UI.Get<UICurtain>().HideAndWait();
     }
 
@@ -83,11 +83,16 @@ public class GameManager : MonoBehaviour
         yield return Main.Level.Load(options.name);
 
         // ... initialize level ...
+        if (_saveLevel == null)
+        {
+            _saveLevel = options.name;
+            _savePoint = FindObjectOfType<Player>().transform.position;
+        }
 
         // ... initialize player ...
         if (options.transition != null)
         {
-            var gate = FindObjectsOfType<LevelGate>().FirstOrDefault(x => x.name == options.transition.Gate);
+            var gate = FindObjectsOfType<LevelGate>().FirstOrDefault(x => x.name == options.transition.Entrance);
             if (gate == null)
                 throw new Exception();
 
@@ -99,7 +104,13 @@ public class GameManager : MonoBehaviour
         else if (options.death)
         {
             PlayerHealth.Instance.InstantlyRestoreAllHealth();
-            FindObjectOfType<Player>().SetPosition(_savePoint);
+
+            // FIXME
+            var player = FindObjectOfType<Player>();
+            var bench = FindObjectOfType<Bench>();
+            bench.Place(player); 
+
+            // FindObjectOfType<Player>().Setup(_savePoint, 0, true, true);
         }
 
         FindObjectOfType<PlayerCameraController>().Setup(
