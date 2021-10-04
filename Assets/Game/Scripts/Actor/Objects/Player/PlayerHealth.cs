@@ -63,7 +63,7 @@ public class PlayerHealth
     {
         Debug.Log("Creating new PlayerData instance.");
         _instance = new PlayerHealth();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
         {
             var newSegment = new PlayerHealthSegment();
             newSegment.Filled += _instance.OnHealthSegmentFill;
