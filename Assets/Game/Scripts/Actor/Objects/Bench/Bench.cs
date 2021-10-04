@@ -40,7 +40,7 @@ public class Bench : MonoBehaviour, IInteractionHander, IEntrance
         }
     }
 
-    public void Place(Player player)
+    public void Place(Player player, EntranceInfo info)
     {
         player.Setup(transform.position + 0.5f*Vector3.up, 0, true, true);
         _active = true;

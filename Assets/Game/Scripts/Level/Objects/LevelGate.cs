@@ -14,7 +14,7 @@ using UnityEditor;
 [ExecuteInEditMode]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class LevelGate : MonoBehaviour
+public class LevelGate : MonoBehaviour, IEntrance
 {
     [HideInInspector] [SerializeField] private Sprite _sprite;
 
@@ -264,9 +264,10 @@ public class LevelGate : MonoBehaviour
     }
 
     #endregion
-    
-    public void Place(Player player, PlayerTransitArgs message)
+
+    public void Place(Player player, EntranceInfo info)
     {
+        var entrance = info.Offset;
         var offset = Vector2.zero;
         var direction = 0f;
 
@@ -275,28 +276,23 @@ public class LevelGate : MonoBehaviour
             case Side.Left:
             case Side.Right:
 
-                const float margin = 0.2f;
-                var offsetX = -message.GateOffset.x - margin * Mathf.Sign(message.GateOffset.x);
-                
-                var prevGateHeight = message.GateSize.y;
-                var currGateHeight = transform.localScale.y;
-                var offsetY = (prevGateHeight - currGateHeight) / 2  + message.GateOffset.y;
+                var offsetX = entrance.x * -1.2f;
+                var offsetY = entrance.y - transform.localScale.y/2;
 
                 offset = new Vector2(offsetX, offsetY);
                 direction = _side == Side.Right ? -1 : +1;
-
                 break;
             case Side.Top:
                 offset = 2 * Vector2.down;
-                direction = Mathf.Sign(message.GateOffset.x);
+                direction = Mathf.Sign(entrance.x);
                 break;
             case Side.Bottom:
-                offset = new Vector2(message.GateOffset.x < 0 ? -2 : +2, +3);
-                direction = Mathf.Sign(message.GateOffset.x);
+                offset = new Vector2(entrance.x < 0 ? -2 : +2, +3);
+                direction = Mathf.Sign(entrance.x);
                 break;
         }
 
-        player.Setup(transform.position + (Vector3)offset);
+        player.Setup(transform.position + (Vector3)offset, direction);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -305,13 +301,20 @@ public class LevelGate : MonoBehaviour
         var player = other.GetComponentInParent<Player>();
         if (player == null)
             return;
+                
+        var info = new EntranceInfo()
+        {
+            Offset = new Vector2(
+                player.transform.position.x - transform.position.x,
+                transform.localScale.y/2 - (transform.position.y - player.transform.position.y)
+            )
+        };
 
         Main.Hook.PlayerTransit.Invoke(
             new PlayerTransitArgs(
                 _level,
                 _gate,
-                player.transform.position - transform.position,
-                transform.localScale
+                info
             )
         );
     }

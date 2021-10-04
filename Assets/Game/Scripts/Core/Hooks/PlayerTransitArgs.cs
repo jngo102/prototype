@@ -4,15 +4,12 @@ public class PlayerTransitArgs
 {
     public string Level { get; }
     public string Entrance { get; }
+    public EntranceInfo EntranceInfo { get; }
 
-    public Vector2 GateOffset { get; }
-    public Vector2 GateSize { get; }
-
-    public PlayerTransitArgs(string level, string entrance, Vector2 offset, Vector2 size)
+    public PlayerTransitArgs(string level, string entrance, EntranceInfo entranceInfo)
     {
         Level = level;
         Entrance = entrance;
-        GateOffset = offset;
-        GateSize = size;
+        EntranceInfo = entranceInfo;
     }
 }

@@ -381,7 +381,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
                 if (_lastGeometryName != geometry.name)
                 {
                     _lastGeometryName = geometry.name;
-                    Debug.Log("LastPosition = " + _lastGeometryName);
+                    // Debug.Log("LastPosition = " + _lastGeometryName);
                 }
 
                 _lastGeometryBounds = geometry.Bounds;
@@ -430,7 +430,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private void SyncAnimator()
     {
         animator.SetFloat("vertSpeed", velocity.y);
-        animator.SetBool("isRunning", velocity.x != 0.0f);
+        animator.SetBool("isRunning", finalDirection.x != 0.0f);
         animator.SetBool("isGrounded", body.collisions.below);
         animator.SetBool("isInvincible", invincibleTimer);
         animator.SetBool("isOnBench", isOnBench);

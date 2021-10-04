@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     private string _saveLevel;
-    private Vector2 _savePoint;
+    private string _saveEntrance;
 
     public void Start()
     {
@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
     {
         Open(new OpenArgs() {
             name = message.Level,
-            transition = message
+            entranceName = message.Entrance,
+            entranceInfo = message.EntranceInfo
         });
     }
 
@@ -51,17 +52,18 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
-        // Remove!
+        PlayerHealth.Instance.InstantlyRestoreAllHealth();
+
         Open(new OpenArgs() {
             name = _saveLevel,
-            death = true
+            entranceName = _saveEntrance
         });
     }
 
     private void OnPlayerSave()
     {
         _saveLevel = Main.Level.Name;
-        _savePoint = FindObjectOfType<Player>().transform.position;
+        _saveEntrance = FindObjectOfType<Bench>().name;
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
@@ -71,48 +73,37 @@ public class GameManager : MonoBehaviour
     }
 
     //
-    // ...
+    // Open/Close
     //
-    private void Open(OpenArgs options) => StartCoroutine(OpenCoroutine(options));
-    private IEnumerator OpenCoroutine(OpenArgs options)
+    private void Open(OpenArgs args) => StartCoroutine(OpenCoroutine(args));
+    private IEnumerator OpenCoroutine(OpenArgs args)
     {
-        Physics2D.simulationMode = SimulationMode2D.Script;
-
         Main.Input.Player.Enable();
         yield return Main.UI.Get<UICurtain>().ShowAndWait();
-        yield return Main.Level.Load(options.name);
+        yield return Main.Level.Load(args.name);
 
         // ... initialize level ...
         if (_saveLevel == null)
         {
-            _saveLevel = options.name;
-            _savePoint = FindObjectOfType<Player>().transform.position;
+            _saveLevel = args.name;
+            _saveEntrance = FindObjectOfType<Bench>().name;
         }
 
         // ... initialize player ...
-        if (options.transition != null)
+        if (args.entranceName != null)
         {
-            var gate = FindObjectsOfType<LevelGate>().FirstOrDefault(x => x.name == options.transition.Entrance);
-            if (gate == null)
-                throw new Exception();
-
-            gate.Place(
-                FindObjectOfType<Player>(),
-                options.transition
-            );
-        }
-        else if (options.death)
-        {
-            PlayerHealth.Instance.InstantlyRestoreAllHealth();
-
-            // FIXME
-            var player = FindObjectOfType<Player>();
-            var bench = FindObjectOfType<Bench>();
-            bench.Place(player); 
-
-            // FindObjectOfType<Player>().Setup(_savePoint, 0, true, true);
+            var entrance = FindObjectsOfType<MonoBehaviour>()
+                .Where(x => x.name == args.entranceName)
+                .OfType<IEntrance>()
+                .FirstOrDefault();
+            
+            if (entrance == null)
+                throw new Exception($"There is no entrance with name '{args.entranceName}'");
+            
+            entrance.Place(FindObjectOfType<Player>(), args.entranceInfo);
         }
 
+        // FIXME: Remove
         FindObjectOfType<PlayerCameraController>().Setup(
             Camera.main,
             FindObjectOfType<Player>(),
@@ -120,8 +111,6 @@ public class GameManager : MonoBehaviour
         );
 
         Main.UI.Get<HUD>().Show();
-
-        Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
         yield return Main.UI.Get<UICurtain>().HideAndWait();
     }
 
@@ -129,8 +118,8 @@ public class GameManager : MonoBehaviour
     {
         public string name;
 
-        public PlayerTransitArgs transition;
-        public bool death;
+        public string entranceName;
+        public EntranceInfo entranceInfo;
     }
 
     private void Close() => StartCoroutine(CloseCoroutine());
