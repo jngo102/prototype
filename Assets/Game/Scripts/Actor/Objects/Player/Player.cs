@@ -13,7 +13,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     const float jumpWallHBoost = 5f;
     const float fallMaxSpeed = -15f;
     const float fallMaxSpeedClinging = -5f;
-    const float recoilHSpeed = 12f;
+    const float recoilHSpeed = 8f;
     private float recoilVSpeed = GetVelocity(gravity, jumpTimer, 2);
 
     const float jumpTimer = 0.1f;
