@@ -3,13 +3,15 @@ using UnityEngine;
 [ExecuteAlways]
 public class ParticleSystemScaler : MonoBehaviour
 {
-    void Update()
+    private void LateUpdate()
     {
         var system = GetComponent<ParticleSystem>();
         if (system != null && Camera.main != null)
         {
             // Position
-            system.transform.position = Camera.main.transform.position;
+            var source = Camera.main.transform.position;
+            source.z = system.transform.position.z;
+            system.transform.position = source;
 
             // Size
             var systemShape = system.shape;

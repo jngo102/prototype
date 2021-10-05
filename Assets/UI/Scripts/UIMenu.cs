@@ -47,6 +47,11 @@ public class UIMenu : UIManager.UIBehaviour
 
     protected override IEnumerator OnShow()
     {
+        // var music = new [] { Sounds.Track1, Sounds.Track2, Sounds.GardensVillage };
+        // var musicIndex = Mathf.RoundToInt(Random.value * music.Length);
+        // var track = music[musicIndex];
+        // Main.Audio.Play(track);
+
         Main.Input.UI.Enable();
         Select(_play);
         yield break;
