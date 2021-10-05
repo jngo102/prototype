@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
     // Speeds & Boosts & Times
-    const float gravity = -80;
+    const float gravity = -60;
     const float moveSpeed = 6f;
     private float jumpSpeed = GetVelocity(gravity, jumpTimer, 3);
     const float jumpHBoost = 0.5f;

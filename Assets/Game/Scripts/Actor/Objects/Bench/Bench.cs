@@ -35,7 +35,7 @@ public class Bench : MonoBehaviour, IInteractionHander, IEntrance
         {
             _label.SetBool("Show", false);
             _fxActivate.gameObject.SetActive(true);
-            Main.Hook.PlayerSave.Invoke();
+            Main.Hook.PlayerSave.Invoke(new PlayerSaveArgs(name));
             PlayerCameraController.Instance.Shake();
         }
     }

@@ -60,10 +60,10 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    private void OnPlayerSave()
+    private void OnPlayerSave(PlayerSaveArgs message)
     {
         _saveLevel = Main.Level.Name;
-        _saveEntrance = FindObjectOfType<Bench>().name;
+        _saveEntrance = message.Entrance;
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 

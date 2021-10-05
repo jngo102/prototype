@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerTransitArgs
 {
     public string Level { get; }

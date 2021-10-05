@@ -5,8 +5,8 @@ public class HookManager
 {
     public Hook<PlayerTransitArgs> PlayerTransit;
     public Hook<PlayerRecoveryArgs> PlayerRecovery;
+    public Hook<PlayerSaveArgs> PlayerSave;
     public Hook PlayerDeath;
-    public Hook PlayerSave;
 }
 
 public struct Hook
