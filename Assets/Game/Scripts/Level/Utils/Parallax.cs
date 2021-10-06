@@ -27,7 +27,7 @@ public class Parallax : MonoBehaviour
         transform.position = _start + offset;
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         var bounds = GetComponentInParent<LevelBounds>();
         if (bounds == null)

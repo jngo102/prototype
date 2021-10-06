@@ -5453,12 +5453,12 @@ MonoBehaviour:
   m_Debug: 0
   m_Textures:
   - m_Name: Default
-    m_Format: 0
+    m_Format: 7
     m_Scale: 1
     m_Depth: 0
     m_MipMaps: 1
   - m_Name: UI
-    m_Format: 0
+    m_Format: 7
     m_Scale: 1
     m_Depth: 0
     m_MipMaps: 1
