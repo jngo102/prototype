@@ -32,6 +32,8 @@ public class AudioManager : MonoBehaviour
 
     private void OnValidate()
     {
+        #if UNITY_EDITOR
+
         var clipsFolderPath = AssetDatabase.GetAssetPath(_clipsFolder);
         var clipsFolderIsValid = AssetDatabase.IsValidFolder(clipsFolderPath);
         if (clipsFolderIsValid == false)
@@ -40,6 +42,8 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning($"'{clipsFolderPath}' must be a Folder");
             return;
         }
+
+        #endif
     }
 
     [Button(null, EButtonEnableMode.Editor)]
@@ -130,8 +134,10 @@ public class AudioManager : MonoBehaviour
         {
             var result = new AudioClipReference();
 
+            #if UNITY_EDITOR
             result.Path = AssetDatabase.GUIDToAssetPath(guid);
             result.Clip = AssetDatabase.LoadAssetAtPath<AudioClip>(result.Path);
+            #endif
 
             return result;
         }
