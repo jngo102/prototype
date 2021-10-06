@@ -5452,11 +5452,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Debug: 0
   m_Textures:
-  - m_Name: Far
-    m_Format: 0
-    m_Scale: 1
-    m_Depth: 0
-    m_MipMaps: 1
   - m_Name: Default
     m_Format: 0
     m_Scale: 1
@@ -5468,7 +5463,7 @@ MonoBehaviour:
     m_Depth: 0
     m_MipMaps: 1
   m_Cameras:
-  - m_TextureName: Far
+  - m_TextureName: Default
     m_Culling:
       serializedVersion: 2
       m_Bits: 65536
@@ -5480,7 +5475,7 @@ MonoBehaviour:
     m_Canvases: []
     m_PostEffects:
     - {fileID: 11400000, guid: ff159afc00c1d49948d7e91e91329aac, type: 2}
-  - m_TextureName: Far
+  - m_TextureName: Default
     m_Culling:
       serializedVersion: 2
       m_Bits: 131072
@@ -5498,8 +5493,8 @@ MonoBehaviour:
       m_Bits: 223
     m_ClippingFrom: 0
     m_ClippingTo: 1000
-    m_ColorClear: 1
-    m_Color: {r: 0.2784314, g: 0.2784314, b: 0.2784314, a: 0}
+    m_ColorClear: 0
+    m_Color: {r: 0, g: 0, b: 0, a: 0}
     m_Raycaster: 0
     m_Canvases: []
     m_PostEffects: []
@@ -5527,8 +5522,6 @@ MonoBehaviour:
     - {fileID: 1712509521}
     m_PostEffects: []
   m_Images:
-  - m_TextureName: Far
-    m_Material: {fileID: 0}
   - m_TextureName: Default
     m_Material: {fileID: 0}
   - m_TextureName: UI

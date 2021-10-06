@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _horizontal: 0.5
-  _vertical: 0.5
+  _vertical: 0
 --- !u!1 &156716691
 GameObject:
   m_ObjectHideFlags: 0
@@ -3856,4 +3856,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _horizontal: 0.2
-  _vertical: 0.2
+  _vertical: 0
