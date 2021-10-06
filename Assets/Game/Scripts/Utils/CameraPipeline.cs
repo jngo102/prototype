@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -87,7 +88,7 @@ public class CameraPipeline : MonoBehaviour
         var canvas = m_ImagesRoot.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = m_MasterCamera;
-        canvas.planeDistance = m_MasterCamera.nearClipPlane;
+        canvas.planeDistance = m_MasterCamera.nearClipPlane + 0.1f;
 
         // Parts
 
@@ -178,6 +179,20 @@ public class CameraPipeline : MonoBehaviour
     }
     
     //
+    // Public API
+    //
+    
+    public List<Camera> GetCameras()
+    {
+        var result = new List<Camera>();
+
+        foreach (var cameraInfo in m_Cameras)
+            result.Add(cameraInfo.Camera);
+
+        return result;
+    }
+
+    //
     // Internal classes
     //
 
@@ -247,8 +262,8 @@ public class CameraPipeline : MonoBehaviour
         [SerializeField] private bool m_ColorClear = true;
         [SerializeField] private Color m_Color;
         [SerializeField] private PipelineCameraRaycaster m_Raycaster;
-
         [SerializeField] private Canvas[] m_Canvases;
+        [SerializeField] private CameraPipelinePostEffect[] m_PostEffects;
 
         private Camera m_Master;
         private int m_MasterDepthOffset;
@@ -282,6 +297,10 @@ public class CameraPipeline : MonoBehaviour
 
                 raycaster.eventMask = m_Culling;
             }
+
+            // Create PostEffects
+            if (m_PostEffects != null && m_PostEffects.Length > 0)
+                cameraObject.AddComponent<PostEffects>().SetEffects(m_PostEffects);
 
             // Setup properties
             Camera.targetTexture = target;
@@ -326,6 +345,26 @@ public class CameraPipeline : MonoBehaviour
                     foreach (var canvas in m_Canvases)
                         if (canvas != null)
                             canvas.worldCamera = m_Master;
+            }
+        }
+    
+        [ExecuteInEditMode]
+        private class PostEffects : MonoBehaviour
+        {
+            private CameraPipelinePostEffect[] m_Effects;
+
+            public void SetEffects(CameraPipelinePostEffect[] effects)
+            {
+                if (effects == null)
+                    effects = new CameraPipelinePostEffect[0];
+
+                m_Effects = effects;
+            }
+
+            public void OnRenderImage(RenderTexture source, RenderTexture destination)
+            {
+                for (var i = 0; i < m_Effects.Length; i++)
+                    m_Effects[i].OnRenderImage(source, destination);
             }
         }
     }

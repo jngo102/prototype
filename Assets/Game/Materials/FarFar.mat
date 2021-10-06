@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Background_0
+  m_Name: FarFar
   m_Shader: {fileID: 4800000, guid: a97df630fd7314bcd89d2c4045e66610, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -57,7 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
-    - _BlurSize: 0.0028
+    - _BlurSize: 0.005
     - _BumpScale: 1
     - _ColorMask: 15
     - _Cutoff: 0.5
@@ -70,6 +70,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Radius: 1
     - _Size: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

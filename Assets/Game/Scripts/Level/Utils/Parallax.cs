@@ -1,30 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
-    Camera mainCamera;
-    public float parallaxAmount;
-    Vector2 startPos;
+    [Range(-1, 1)]
+    public float _horizontal;
+    [Range(-1, 1)]
+    public float _vertical;
 
-    Vector3 position;
-    void Start()
+    private Camera _camera;
+    private Vector3 _bounds;
+    private Vector3 _start;
+
+    private void Start()
     {
-        mainCamera = Camera.main;
-        startPos.x = transform.position.x;
-        startPos.y = transform.position.y;
+        _camera = Camera.main;
+        _bounds = GetComponentInParent<LevelBounds>()?.transform.position ?? Vector3.zero;
+        _start = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
-        float distX = (mainCamera.transform.position.x * parallaxAmount);
-        float distY = (mainCamera.transform.position.y * parallaxAmount);
-        position = transform.position;
-        position.x = startPos.x + distX;
-        position.y = startPos.y + distY;
-        transform.position = position;
+        var offset = (_camera.transform.position - _bounds);
+        offset.x *= _horizontal;
+        offset.y *= _vertical;
+        offset.z = 0;
+        transform.position = _start + offset;
+    }
+
+    private void OnDrawGizmos()
+    {
+        var bounds = GetComponentInParent<LevelBounds>();
+        if (bounds == null)
+            return;
         
+        var camera = Camera.main;
+        if (camera == null)
+            return;
+
+        var lvlExtents = bounds.Size / 2;
+        var camExtents = new Vector2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
+
+        var offsets = (lvlExtents - camExtents);
+        offsets.x *= _horizontal;
+        offsets.y *= _vertical;
+
+        var extents = lvlExtents - offsets;
+        var points = new [] { 
+            new Vector3(-extents.x, -extents.y, 0),
+            new Vector3(-extents.x, +extents.y, 0),
+            new Vector3(+extents.x, +extents.y, 0),
+            new Vector3(+extents.x, -extents.y, 0),
+        };
+
+        var center = bounds.transform.position;
+        for (var i = 0; i < 4; i++)
+        {
+            var from = points[i];
+            var to = points[(i+1)%points.Length];
+            Gizmos.DrawLine(center + from, center + to);
+        }
     }
 }

@@ -14,10 +14,18 @@ TagManager:
   - UI
   - Enemy
   - Player
-  - Enemy Attack
-  - Player Attack
-  - Background
-  - FarBackground
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - FarFar
+  - Far
+  - Near
+  - NearNear
   - 
   - 
   - 
@@ -27,14 +35,6 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - cp-back-0
-  - cp-back-1
-  - cp-front-0
   - 
   - 
   - 

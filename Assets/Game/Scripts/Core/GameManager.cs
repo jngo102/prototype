@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         if (_saveLevel == null)
         {
             _saveLevel = args.name;
-            _saveEntrance = FindObjectOfType<Bench>().name;
+            _saveEntrance = FindObjectOfType<Bench>()?.name;
         }
 
         // ... initialize player ...

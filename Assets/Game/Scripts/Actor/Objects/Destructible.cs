@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Actor))]
 public class Destructible : MonoBehaviour, IPreDamageHandler, IDamageHandler
 {
-    float direction = 0;
     bool destroyed = false;
     Vector3 eulerAngles;
     Vector3 position;
