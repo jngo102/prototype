@@ -67,14 +67,14 @@ public class Parallax : MonoBehaviour
             Gizmos.DrawLine(from, to);
         }
 
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                var center = GetCameraCenter(camera, new Vector2(x, y), bounds.Size, bounds.transform.position);
-                Gizmos.DrawSphere(center, 0.3f);
-            }
-        }
+        // for (int x = -1; x <= 1; x++)
+        // {
+        //     for (int y = -1; y <= 1; y++)
+        //     {
+        //         var center = GetCameraCenter(camera, new Vector2(x, y), bounds.Size, bounds.transform.position);
+        //         Gizmos.DrawSphere(center, 0.3f);
+        //     }
+        // }
     }
 
     private static Rect Intersect(Rect rect1, Rect rect2)
