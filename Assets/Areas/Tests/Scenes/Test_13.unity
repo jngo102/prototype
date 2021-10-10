@@ -798,8 +798,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479060947}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 58, y: 20, z: 1}
+  m_LocalPosition: {x: -0.0098, y: -1.50019, z: 0}
+  m_LocalScale: {x: 38.747417, y: 16.99929, z: 1}
   m_Children: []
   m_Father: {fileID: 2123966716}
   m_RootOrder: 7
@@ -855,50 +855,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &524233610 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7467991527780384370, guid: 6241bacc1bafe41d6ac055b4c51382cc, type: 3}
-  m_PrefabInstance: {fileID: 7467991527558927864}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &524233611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524233610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f61130c12cd0c4a64b22d5725f024aac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &524233612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524233610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e3915cdf5562f84d8a520139e0021a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  horizontalRayCount: 4
-  verticalRayCount: 4
-  collisions:
-    above: 0
-    below: 0
-    left: 0
-    right: 0
-    leftEdge: 0
-    rightEdge: 0
-    aboveCollider: []
-    belowColliders: []
-  collider: {fileID: 0}
 --- !u!1 &594713097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3991,10 +3947,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3421579649989812097, guid: 6241bacc1bafe41d6ac055b4c51382cc, type: 3}
-      propertyPath: _damageType
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7467991527780384370, guid: 6241bacc1bafe41d6ac055b4c51382cc, type: 3}
       propertyPath: m_Name
       value: Fly
