@@ -33,6 +33,8 @@ public class LevelManager : MonoBehaviour
         _async = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
         yield return _async;
 
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(name));
+
         _name = name;
         _async = null;
     }
