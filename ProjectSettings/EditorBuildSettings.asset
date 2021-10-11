@@ -32,5 +32,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Areas/Tests/Scenes/Test_13.unity
     guid: b320646be79a54f30a57164910d49471
+  - enabled: 1
+    path: Assets/Areas/Tests/Scenes/Test_Irritation.unity
+    guid: 3389611d839624f2ab412bd9ef83501d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 969680573d2cd8348b8130402f9b8917, type: 2}

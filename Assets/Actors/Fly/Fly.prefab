@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7467991527780384372}
   - component: {fileID: 8730224107386286392}
-  - component: {fileID: 7467991527780384371}
   - component: {fileID: 1942991055902961797}
+  - component: {fileID: 7467991527780384371}
   - component: {fileID: 6898293773082519288}
   m_Layer: 0
   m_Name: Fly
@@ -48,6 +48,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d7734f2bf0e145a1a511e331eede4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1942991055902961797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7467991527780384370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3915cdf5562f84d8a520139e0021a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 8
+  horizontalRayCount: 1
+  verticalRayCount: 1
+  collisions:
+    above: 0
+    below: 0
+    left: 0
+    right: 0
+    leftEdge: 0
+    rightEdge: 0
+    aboveCollider: []
+    belowColliders: []
+  collider: {fileID: 5585894713849199346}
 --- !u!95 &7467991527780384371
 Animator:
   serializedVersion: 3
@@ -67,33 +94,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1942991055902961797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7467991527780384370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e3915cdf5562f84d8a520139e0021a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  horizontalRayCount: 1
-  verticalRayCount: 1
-  collisions:
-    above: 0
-    below: 0
-    left: 0
-    right: 0
-    leftEdge: 0
-    rightEdge: 0
-    aboveCollider: []
-    belowColliders: []
-  collider: {fileID: 5585894713849199346}
 --- !u!114 &6898293773082519288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f61130c12cd0c4a64b22d5725f024aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bullet: {fileID: 7227427644078396967, guid: 31aa94ae29c7f442da6c405ed317fb66, type: 3}
+  _bulletSpeed: 15
 --- !u!1 &7467991528135065135
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7467991528135065120}
   - component: {fileID: 5443982392876912796}
+  - component: {fileID: 6269380438803192193}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -156,7 +159,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -188,6 +191,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6269380438803192193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7467991528135065135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166c3ae79c9ee47ceb77b587e1f09013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brightness: 0
+  saturation: 0
+  hue: 0
 --- !u!1 &7545639536885243099
 GameObject:
   m_ObjectHideFlags: 0

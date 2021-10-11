@@ -3,7 +3,7 @@ using UnityEngine;
 [ExecuteAlways]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class LevelGeometry : MonoBehaviour
+public class LevelGeometry : Actor
 {
     //
     // Colors

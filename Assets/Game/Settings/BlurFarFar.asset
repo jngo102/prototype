@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 269f1630df0ad403c9407ca3ec5e12b7, type: 3}
   m_Name: BlurFarFar
   m_EditorClassIdentifier: 
-  downsample: 2
-  blurSize: 4
-  blurIterations: 3
+  downsample: 1
+  blurSize: 0.1
+  blurIterations: 2
   blurType: 0
   blurShader: {fileID: 4800000, guid: cb44561064a1944c2af2390438f77f66, type: 3}

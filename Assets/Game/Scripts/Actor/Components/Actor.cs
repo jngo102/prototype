@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class Actor : MonoBehaviour
+public /*sealed*/ class Actor : MonoBehaviour
 {
     private Dictionary<Type, object> _cache = new Dictionary<Type, object>();
 

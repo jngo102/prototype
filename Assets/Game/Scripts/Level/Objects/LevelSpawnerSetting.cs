@@ -29,5 +29,6 @@ public class LevelSpawnerSetting : ScriptableObject
 public enum LevelSpawnerType
 {
     Player,
-    Larva
+    Larva,
+    Fly,
 }
