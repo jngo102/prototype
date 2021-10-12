@@ -5485,8 +5485,7 @@ MonoBehaviour:
     m_Color: {r: 0, g: 0, b: 0, a: 0}
     m_Raycaster: 0
     m_Canvases: []
-    m_PostEffects:
-    - {fileID: 11400000, guid: 3dd94607c015346c98f247b45ac4e44e, type: 2}
+    m_PostEffects: []
   - m_TextureName: Default
     m_Culling:
       serializedVersion: 2
