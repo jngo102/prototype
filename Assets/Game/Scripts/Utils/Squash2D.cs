@@ -7,19 +7,19 @@ public class Squash2D : MonoBehaviour
     public float Angle
     {
         get => _squash.angle;
-        set => _squash.angle = value;
+        set { _squash.angle = value; _dirty = true; }
     }
 
     public float ScaleAlong
     {
         get => _squash.scaleAlong;
-        set => _squash.scaleAlong = value;
+        set { _squash.scaleAlong = value; _dirty = true; }
     }
 
     public float ScaleAcross
     {
         get => _squash.scaleAcross;
-        set => _squash.scaleAcross = value;
+        set { _squash.scaleAcross = value; _dirty = true; }
     }
 
     [Serializable]
@@ -45,12 +45,13 @@ public class Squash2D : MonoBehaviour
     private void OnValidate() => _dirty = true;
     private void Update()
     {
-        if (true)
+        if (_dirty)
         {
+            _dirty = false;
+
             if (_squashRoot == null || _squashRoot.parent == null)
                 return;
 
-            _dirty = false;
             _squashRoot.localRotation = Quaternion.Euler(0, 0, -_squash.angle);
             _squashRoot.parent.localRotation = Quaternion.Euler(0, 0, _squash.angle);
             _squashRoot.parent.localScale = new Vector3(_squash.scaleAlong, _squash.scaleAcross, 1);
