@@ -1,23 +1,70 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteAlways]
+[ExecuteInEditMode]
 [DisallowMultipleComponent]
 public class ColorMatrix : MonoBehaviour
 {
     private static string SHADER_NAME = "Hidden/ColorMatrix";
-    private static Material sMaterial;
-    private static Material sMaterialETC1;
+    private static Matrix4x5 sMatrix4x5 = new Matrix4x5();
 
-    private Matrix4x5 matrix4x5 = new Matrix4x5();
-    private Matrix4x4 matrix4x4 = new Matrix4x4();
-    private Vector4 offset = new Vector4();
+    private static Dictionary<Vector3, Material> sMaterialsValues = new Dictionary<Vector3, Material>();
+    private static Dictionary<Material, Vector3> sMaterialsKeys = new Dictionary<Material, Vector3>();
+    private static Dictionary<Vector3, int> sMaterialsCounter = new Dictionary<Vector3, int>();
+    private static Stack<Material> sMaterialsPool = new Stack<Material>();
+
+    private static Material Get(float b, float s, float h)
+    {
+        var key = new Vector3(b, s, h);
+
+        var hasMaterial = sMaterialsValues.ContainsKey(key) && sMaterialsValues[key] != null;
+        if (hasMaterial == false)
+        {
+            // In case we switch playmode all materials are destroyed thus pool is invalid
+            if (sMaterialsPool.Count > 0 && sMaterialsPool.Peek() == null)
+                sMaterialsPool.Clear();
+
+            var material = sMaterialsPool.Count > 0
+                ? sMaterialsPool.Pop()
+                : new Material(Shader.Find(SHADER_NAME));
+            
+            material.hideFlags = HideFlags.HideAndDontSave;
+            
+            var matrix = new Matrix4x4();
+            var offset = new Vector4();
+            CalcMatrix(b, s, h, ref matrix, ref offset);
+
+            material.SetMatrix("_ColorMatrix", matrix);
+            material.SetVector("_ColorOffset", offset);
+
+            sMaterialsKeys[material] = key;
+            sMaterialsValues[key] = material;
+            sMaterialsCounter[key] = 0;
+        }
+
+        sMaterialsCounter[key]++;
+
+        return sMaterialsValues[key];
+    }
+
+    private static void Release(Material material)
+    {
+        var key = sMaterialsKeys[material];
+        var coutner = --sMaterialsCounter[key];
+
+        if (coutner == 0)
+        {
+            sMaterialsKeys.Remove(material);
+            sMaterialsValues.Remove(key);
+            sMaterialsCounter.Remove(key);
+            sMaterialsPool.Push(material);
+        }
+    }
 
     private bool dirty;
-    private List<MaterialOwner> renderers = new List<MaterialOwner>();
-
-    private bool hasAlphaTextures = false;
+    private List<MaterialRenderer> renderers = new List<MaterialRenderer>();
 
     [SerializeField]
     [Range(-1, +1)]
@@ -61,45 +108,42 @@ public class ColorMatrix : MonoBehaviour
     //
     // Setups
     //
-    public void Start()
+
+    private void OnEnable()
     {
-        Reset();
+        var matrix = transform.parent != null ? transform.parent.GetComponentInParent<ColorMatrix>() : null;
+        if (matrix != null)
+        {
+            enabled = false;
+            Debug.LogWarning($"{nameof(ColorMatrix)} already exists on '{matrix.name}'");
+        }
+        else
+        {
+            dirty = true;
+
+            renderers.Clear();
+
+            foreach (var renderer in GetComponentsInChildren<Renderer>())
+                renderers.Add(new MaterialRenderer(renderer));
+
+            foreach (var image in GetComponentsInChildren<Image>())
+                renderers.Add(new MaterialRenderer(image));
+        }
     }
 
-    public void Reset()
+    private void OnDisable()
     {
-        if (sMaterial == null)
-        {
-            sMaterial = new Material(Shader.Find(SHADER_NAME));
-            sMaterial.name += " (Shared)";
-        }
-        if (sMaterialETC1 == null)
-        {
-            sMaterialETC1 = new Material(Shader.Find(SHADER_NAME));
-            sMaterialETC1.SetFloat("_EnableETC1", 1);
-            sMaterialETC1.name += " ETC1 (Shared)";
-        }
-
-        dirty = true;
+        foreach (var renderer in renderers)
+            renderer.Destroy();
+        
         renderers.Clear();
-
-        foreach (var renderer in GetComponents<Renderer>())
-        {
-            renderers.Add(new MaterialOwner(renderer, new Material(Shader.Find(SHADER_NAME)), sMaterial, sMaterialETC1));
-        }
-
-        var image = GetComponent<Image>();
-        if (image != null)
-        {
-            renderers.Add(new MaterialOwner(image, new Material(Shader.Find(SHADER_NAME)), sMaterial, sMaterialETC1));
-            hasAlphaTextures = image.sprite.associatedAlphaSplitTexture != null;
-        }
     }
 
     //
     // Invalidations
     //
 
+    public void Reset() { dirty = true; }
     public void OnValidate() { dirty = true; }
     public void OnDidApplyAnimationProperties() { dirty = true; }
 
@@ -107,36 +151,44 @@ public class ColorMatrix : MonoBehaviour
     // Update
     //
 
-    public void LateUpdate()
+    public void Update()
     {
         if (dirty)
         {
             dirty = false;
-            UpdateMatrix();
-            UpdateMatrials();
+
+            foreach (var renderer in renderers)
+                renderer.Set(Brightness, Saturation, Hue);
         }
     }
 
-    private void UpdateMatrix()
+    //
+    // Helpers
+    //
+    private const float LUMA_R = 0.299f;
+    private const float LUMA_G = 0.587f;
+    private const float LUMA_B = 0.114f;
+
+    private static void CalcMatrix(float b, float s, float h, ref Matrix4x4 matrix4x4, ref Vector4 offset)
     {
-        matrix4x5.Identity();
+        sMatrix4x5.Identity();
 
         // Brightness
-        matrix4x5.Concat(
-            1, 0, 0, 0, Brightness,
-            0, 1, 0, 0, Brightness,
-            0, 0, 1, 0, Brightness,
+        sMatrix4x5.Concat(
+            1, 0, 0, 0, b,
+            0, 1, 0, 0, b,
+            0, 0, 1, 0, b,
             0, 0, 0, 1, 0
         );
 
         // Saturation
-        var sat = saturation + 1;
+        var sat = s + 1;
         var invSat = 1 - sat;
         var invLumR = invSat * LUMA_R;
         var invLumG = invSat * LUMA_G;
         var invLumB = invSat * LUMA_B;
 
-        matrix4x5.Concat(
+        sMatrix4x5.Concat(
             invLumR + sat, invLumG, invLumB, 0, 0,
             invLumR, invLumG + sat, invLumB, 0, 0,
             invLumR, invLumG, invLumB + sat, 0, 0,
@@ -144,45 +196,20 @@ public class ColorMatrix : MonoBehaviour
         );
 
         // Hue
-        var hueAngle = hue * Mathf.PI;
+        var hueAngle = h * Mathf.PI;
         var cos = Mathf.Cos(hueAngle);
         var sin = Mathf.Sin(hueAngle);
 
-        matrix4x5.Concat(
+        sMatrix4x5.Concat(
             LUMA_R + cos * (1 - LUMA_R) + sin * -LUMA_R, LUMA_G + cos * -LUMA_G + sin * -LUMA_G, LUMA_B + cos * -LUMA_B + sin * (1 - LUMA_B), 0, 0,
             LUMA_R + cos * -LUMA_R + sin * 0.143f, LUMA_G + cos * (1 - LUMA_G) + sin * 0.14f, LUMA_B + cos * -LUMA_B + sin * -0.283f, 0, 0,
             LUMA_R + cos * -LUMA_R + sin * -(1 - LUMA_R), LUMA_G + cos * -LUMA_G + sin * LUMA_G, LUMA_B + cos * (1 - LUMA_B) + sin * LUMA_B, 0, 0,
             0, 0, 0, 1, 0);
 
         // Output
-        matrix4x5.CopyTo(ref matrix4x4);
-        matrix4x5.CopyTo(ref offset);
+        sMatrix4x5.CopyTo(ref matrix4x4);
+        sMatrix4x5.CopyTo(ref offset);
     }
-
-    private void UpdateMatrials()
-    {
-        var isIdentity = brightness == 0 && saturation == 0 && hue == 0;
-
-        foreach (var owner in renderers)
-        {
-            if (isIdentity) owner.UseSharedMaterial();
-            else
-            {
-                owner.UseInstanceMaterial();
-                owner.Material.SetMatrix("_ColorMatrix", matrix4x4);
-                owner.Material.SetVector("_ColorOffset", offset);
-                owner.Material.SetFloat("_EnableETC1", hasAlphaTextures ? 1 : 0);
-            }
-        }
-    }
-
-    //
-    // Helpers
-    //
-
-    private const float LUMA_R = 0.299f;
-    private const float LUMA_G = 0.587f;
-    private const float LUMA_B = 0.114f;
 
     private class Matrix4x5
     {
@@ -284,43 +311,29 @@ public class ColorMatrix : MonoBehaviour
         }
     }
 
-    private class MaterialOwner
+    private class MaterialRenderer
     {
-        private Material sharedMaterial;
-        private Material sharedMaterialETC1;
         private Material material;
         private Renderer renderer;
         private Image image;
 
-        public MaterialOwner(Renderer renderer, Material material, Material sharedMaterial, Material sharedMaterialETC1)
+        public MaterialRenderer(Renderer renderer)
         {
-            this.material = material;
             this.renderer = renderer;
-            this.sharedMaterial = sharedMaterial;
-            this.sharedMaterialETC1 = sharedMaterialETC1;
         }
 
-        public MaterialOwner(Image image, Material material, Material sharedMaterial, Material sharedMaterialETC1)
+        public MaterialRenderer(Image image)
         {
-            this.material = material;
             this.image = image;
-            this.sharedMaterial = sharedMaterial;
-            this.sharedMaterialETC1 = sharedMaterialETC1;
         }
 
-        public void UseSharedMaterial()
+        public void Set(float b, float s, float h)
         {
-            if (image && image.sprite != null)
-            {
-                image.material = image.sprite.associatedAlphaSplitTexture != null ? sharedMaterialETC1 : sharedMaterial;
-            }
+            if (material != null)
+                Release(material);
 
-            if (renderer)
-                renderer.sharedMaterial = sharedMaterial;
-        }
+            material = Get(b, s, h);
 
-        public void UseInstanceMaterial()
-        {
             if (image)
                 image.material = material;
 
@@ -328,6 +341,10 @@ public class ColorMatrix : MonoBehaviour
                 renderer.material = material;
         }
 
-        public Material Material => material;
+        public void Destroy()
+        {
+            if (material != null)
+                Release(material);
+        }
     }
 }

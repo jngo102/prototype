@@ -4,10 +4,6 @@
 	{
 		[PerRendererData] _MainTex ("Texture", 2D) = "white" {}
 		[PerRendererData] _Color ("Tint", Color) = (1,1,1,1)
-		[PerRendererData] _AlphaTex ("Alpha Texture", 2D) = "white" {}
-		[PerRendererData] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
-
-		_EnableETC1 ("Enable ETC 1", float) = 0
 	}
 
 	SubShader
@@ -17,14 +13,14 @@
 
 		Tags { "Queue" = "Transparent" }
 
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha, One One
 		
 		Pass
 		{
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
+			#pragma multi_compile
 
 			#include "UnityCG.cginc"
 
@@ -42,20 +38,15 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			// Input
 			sampler2D _MainTex;
-
-			fixed4 _Color;
-			float4 _ColorOffset;
-			float4x4 _ColorMatrix;
-
-			float _EnableETC1;
+			float4 _MainTex_ST;
 
 			sampler2D _AlphaTex;
-			float _EnableExternalAlpha;
+			float _AlphaSplitEnabled;
 
-			// Temporary (for TRANSFORM_TEX)
-			float4 _MainTex_ST;
+			fixed4 _Color;
+			fixed4 _ColorOffset;
+			fixed4x4 _ColorMatrix;
 
 			v2f vert (a2v v)
 			{
@@ -70,16 +61,15 @@
 			{
 				fixed4 color = tex2D(_MainTex, i.uv);
 				
-				// TODO : Способ не работает на Android с ETC1
-				// ETC1_EXTERNAL_ALPHA
+				#if UNITY_TEXTURE_ALPHASPLIT_ALLOWED
+					if (_AlphaSplitEnabled)
+						color.a = tex2D (_AlphaTex, uv).r;
+				#endif
 
-				if(_EnableETC1) {
-					fixed4 alpha = tex2D(_AlphaTex, i.uv);
-    				color.a = lerp(color.a, alpha.r, 1);
-				}
+				fixed4 multiply = saturate(mul(_ColorMatrix, color * i.color));
+				fixed4 output = saturate(_ColorOffset + multiply);
 
-				color = _ColorOffset + mul(_ColorMatrix, color);
-				return color * i.color;
+				return output;
 			}
 			ENDCG
 		}
