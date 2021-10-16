@@ -292,7 +292,7 @@ public class LevelGate : MonoBehaviour, IEntrance
                 break;
         }
 
-        player.Setup(transform.position + (Vector3)offset, direction);
+        player.Setup(transform.position + (Vector3)offset, direction, true);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

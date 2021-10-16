@@ -5,34 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(ActorBody))]
 public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
-    // Speeds & Boosts & Times
-    const float gravity = -60;
-    const float moveSpeed = 6f;
-    private float jumpSpeed = GetVelocity(gravity, jumpTimer, 3);
-    const float jumpHBoost = 0.5f;
-    const float jumpWallHBoost = 5f;
-    const float fallMaxSpeed = -15f;
-    const float fallMaxSpeedClinging = -5f;
-    const float recoilHSpeed = 8f;
-    private float recoilVSpeed = GetVelocity(gravity, jumpTimer, 2);
-
-    const float jumpTimer = 0.1f;
-
-    private static float GetVelocity(float g, float jumpTime, float jumpHeight)
-    {
-        var a = 1 / (2 * Mathf.Abs(g));
-        var b = jumpTime;
-        var c = -jumpHeight;
-
-        var d = b*b - 4*a*c;
-        Debug.Assert(d > 0);
-
-        var x1 = (-b + Mathf.Sqrt(d)) / (2 * a);
-        return x1;
-    }
-
-    [SerializeField] private float attackCooldownTime;
-    [SerializeField] private float attackTime;
+    [SerializeField]
+    private PlayerSettings settings;
 
     // Player Input
     private InputManager input;
@@ -44,27 +18,31 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private bool inputLookDown;
 
     // Timers
-    private Timer jumpGraceTimer = new Timer(.05f);
-    private Timer jumpWallGraceTimer = new Timer(.05f);
-    private Timer jumpVarTimer = new Timer(jumpTimer);
-    private Timer jumpCoyoteTimer = new Timer(.05f);
+    private Timer jumpGraceTimer = new Timer();
+    private Timer wallJumpCoyoteTimer = new Timer();
+    private Timer jumpVarTimer = new Timer();
+    private Timer jumpCoyoteTimer = new Timer();
     private Timer forceDirectionTimer = new Timer();
 
     private Timer attackCooldownTimer = new Timer();
     private Timer attackTimer = new Timer();
 
-    private Timer recoilTimer = new Timer(jumpTimer);
-    private Timer invincibleTimer = new Timer(0.85f);
+    private Timer recoilTimer = new Timer();
+    private Timer invincibleTimer = new Timer();
 
     // State
     private Vector2 forceDirection;
     private Vector2 finalDirection;
-    private Vector2 recoilDirection;
-    private float jumpWallDir;
+    private Vector2 recoilVelocity;
+    private float wallJumpDir;
     private Vector2 velocity;
     private int lookAt;
 
     private bool isOnBench;
+
+
+
+
 
 
 
@@ -226,7 +204,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
         finalDirection = forceDirectionTimer ? forceDirection : inputDirection;
 
-        velocity.x = finalDirection.x * moveSpeed;
+        velocity.x = finalDirection.x * settings.moveVelocity;
 
         // [Collision]
 
@@ -238,13 +216,13 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
         if (body.collisions.below)
         {
-            jumpCoyoteTimer.Start();
+            jumpCoyoteTimer.Start(settings.jumpCoyoteTime);
         }
 
         if ((body.collisions.right || body.collisions.left) && !body.collisions.below)
         {
-            jumpWallGraceTimer.Start();
-            jumpWallDir = body.collisions.right ? -1 : 1;
+            wallJumpCoyoteTimer.Start(settings.jumpCoyoteTime);
+            wallJumpDir = body.collisions.right ? -1 : 1;
         }
 
         // [Jump]
@@ -252,66 +230,67 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         if (inputJumpDown)
         {
             inputJumpDown = false;
-            jumpGraceTimer.Start();
+            jumpGraceTimer.Start(settings.jumpGraceTime);
         }
 
+        // Do jump
         if (jumpGraceTimer && jumpCoyoteTimer)
         {
             jumpGraceTimer.Zero();
-            jumpVarTimer.Start();
-
-            velocity.x += jumpHBoost * Mathf.Sign(finalDirection.x);
+            jumpCoyoteTimer.Zero();
+            jumpVarTimer.Start(settings.jumpTime);
         }
 
-        if (jumpGraceTimer && jumpWallGraceTimer)
+        // Do wall jump
+        else if (jumpGraceTimer && wallJumpCoyoteTimer)
         {
             jumpGraceTimer.Zero();
-            jumpVarTimer.Start();
+            wallJumpCoyoteTimer.Zero();
+            jumpVarTimer.Start(settings.jumpTime);
 
-            velocity.x += jumpWallHBoost * jumpWallDir;
-
-            forceDirection.x = jumpWallDir;
+            forceDirection.x = wallJumpDir;
             forceDirection.y = 0;
-            forceDirectionTimer.Start(.25f);
+            forceDirectionTimer.Start(settings.jumpWallPushTime);
+
+            // TODO : MOVE
+            // velocity.x += settings.wallJumpHeight * wallJumpDir;
         }
 
-        if (jumpVarTimer)
+        // Continue jumping (jump higher)
+        if (jumpVarTimer && inputJump)
         {
-            if (inputJump)
-            {
-                velocity.y = jumpSpeed;
-            }
-            else
-            {
-                jumpVarTimer.Zero();
-            }
+            velocity.y = settings.CalcVelocity(settings.gravity, settings.jumpTime, settings.jumpHeight);
+        }
+        else
+        {
+            jumpVarTimer.Zero();
         }
 
         // [Recoil]
         if (recoilTimer)
         {
-            if (recoilDirection.x != 0)
-                velocity.x = recoilDirection.x * recoilHSpeed;
+            if (recoilVelocity.x != 0)
+                velocity.x = recoilVelocity.x;
             
-            if (recoilDirection.y != 0)
-                velocity.y = recoilDirection.y * recoilVSpeed;
+            if (recoilVelocity.y != 0)
+                velocity.y = recoilVelocity.y;
             
             // In case you are on spikes or are dying
-            if (recoilDirection == Vector2.zero)
+            if (recoilVelocity == Vector2.zero)
                 velocity = Vector2.zero;
         }
         else
         {
-            recoilDirection = Vector2.zero;
+            recoilVelocity = Vector2.zero;
         }
 
         // [Movement]
 
         var clinging = (body.collisions.right && finalDirection.x == 1) || (body.collisions.left && finalDirection.x == -1);
-        var maxYSpeed = clinging ? fallMaxSpeedClinging : fallMaxSpeed;
+        var maxYSpeed = clinging ? settings.fallSpeedClinging : settings.fallSpeed;
         
         if (!jumpVarTimer && !recoilTimer)
-            velocity.y += gravity * Time.deltaTime;
+            velocity.y += settings.gravity * Time.deltaTime;
 
         velocity.y = Mathf.Max(velocity.y, maxYSpeed);
 
@@ -328,8 +307,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
             if (!attackCooldownTimer)
             {
-                attackCooldownTimer.Start(attackCooldownTime);
-                attackTimer.Start(attackTime);
+                attackCooldownTimer.Start(settings.nailCooldownTime);
+                attackTimer.Start(settings.nailDurationTime);
 
                 var weaponTransformAngle = 0;
                 if (inputDirection.y > 0) weaponTransformAngle = 90;
@@ -400,7 +379,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         jumpGraceTimer.Update();
         jumpCoyoteTimer.Update();
         jumpVarTimer.Update();
-        jumpWallGraceTimer.Update();
+
+        wallJumpCoyoteTimer.Update();
 
         recoilTimer.Update();
         invincibleTimer.Update();
@@ -460,8 +440,14 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
         if (force)
         {
-            forceDirectionTimer.Start(invincibleTimer.time * 2/3);
-            forceDirection = Vector2.zero;
+            forceDirectionTimer.Start(1/6f);
+
+            if (direction == 0)
+                forceDirection = Vector2.zero;
+            else if (direction < 0)
+                forceDirection = Vector2.left;
+            else
+                forceDirection = Vector2.right;
         }
 
         GetComponent<PlayerCameraController>().Instant();
@@ -502,11 +488,13 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     {
         if (info.Recoil)
         {
-            recoilTimer.Start();
+            recoilTimer.Start(settings.nailRecoilTime);
 
-            if (inputDirection.y > 0) recoilDirection.y = -1;
-            else if (inputDirection.y < 0) recoilDirection.y = +1;
-            else recoilDirection.x = -heldTransform.localScale.x;
+            var velocity = settings.CalcVelocity(settings.gravity, settings.nailRecoilTime, settings.nailRecoilHeight);
+
+            if (inputDirection.y > 0) recoilVelocity = velocity * Vector2.down;
+            else if (inputDirection.y < 0) recoilVelocity = velocity * Vector2.up;
+            else recoilVelocity.x = -heldTransform.localScale.x * settings.nailRecoilVelocity;
         }
     }
 
@@ -518,20 +506,20 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
     public void OnDamage(DamageInfo info)
     {
-        invincibleTimer.Start();
+        invincibleTimer.Start(settings.damageInvincibleTime);
         PlayerHealth.Instance.InstantlyDrainHealth(1);
         PlayerCameraController.Instance.Shake();
 
         if (PlayerHealth.Instance.NoHealth)
         {
-            recoilTimer.Start();
-            recoilDirection = Vector2.zero;
+            recoilTimer.Start(settings.damageRecoilTime);
+            recoilVelocity = Vector2.zero;
             Main.Hook.PlayerDeath.Invoke();
         }
         else if (info.Type == DamageType.Spikes)
         {
-            recoilTimer.Start();
-            recoilDirection = Vector2.zero;
+            recoilTimer.Start(settings.damageRecoilTime);
+            recoilVelocity = Vector2.zero;
 
             Main.Hook.PlayerRecovery.Invoke(
                 new PlayerRecoveryArgs(
@@ -548,8 +536,8 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             delta.x = horizontal ? Sign(delta.x) : 0;
             delta.y = horizontal ? 0 : Sign(delta.y);
 
-            recoilTimer.Start();
-            recoilDirection = delta;
+            recoilTimer.Start(settings.damageRecoilTime);
+            recoilVelocity = delta * settings.damageRecoilVelocity;
         }
     }
 

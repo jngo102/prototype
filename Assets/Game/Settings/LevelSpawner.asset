@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 009f27c70cfbb445199b3a111918dfdd, type: 3}
-  m_Name: LevelSpawnerSetting
+  m_Name: LevelSpawner
   m_EditorClassIdentifier: 
   _setting:
   - Type: 0

@@ -455,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b8ff06be969654d8095aa8810eb544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 7508ad1a084454fb19777437292e6942, type: 2}
   attackCooldownTime: 0.3
   attackTime: 0.1
   heldTransform: {fileID: 4169506398698223111}
