@@ -10,25 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63b255a94a0ea44fca9049c92d2eba27, type: 3}
-  m_Name: 
+  m_Name: Player
   m_EditorClassIdentifier: 
   gravity: -60
   moveVelocity: 6
   fallSpeed: -15
-  fallSpeedClinging: -5
+  fallSpeedClinging: -4
   jumpHeight: 3
-  jumpTime: 0.3
-  jumpGraceTime: 0.05
-  jumpCoyoteTime: 0.05
-  jumpHorBoost: 0.5
-  jumpWallGraceTime: 0.05
-  jumpWallTime: 0.25
-  jumpWallVelocity: 5
+  jumpTime: 0.15
+  jumpGraceTime: 0.1
+  jumpCoyoteTime: 0.1
+  jumpWallPushTime: 0.15
   nailCooldownTime: 0.3
   nailDurationTime: 0.1
-  nailRecoilTime: 0.2
-  nailRecoilVerticalHeight: 5
-  nailRecoilHorizontalVelocity: 8
+  nailRecoilTime: 0.1
+  nailRecoilVelocity: 8
+  nailRecoilHeight: 2
   damageInvincibleTime: 0.85
   damageRecoilTime: 0.1
   damageRecoilVelocity: 8

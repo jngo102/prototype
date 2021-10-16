@@ -24,6 +24,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Timer jumpCoyoteTimer = new Timer();
     private Timer forceDirectionTimer = new Timer();
 
+    private Timer attackGraceTimer = new Timer();
     private Timer attackCooldownTimer = new Timer();
     private Timer attackTimer = new Timer();
 
@@ -304,22 +305,22 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         if (inputAttackDown)
         {
             inputAttackDown = false;
+            attackGraceTimer.Start(settings.nailGraceTime);
+        }
 
-            if (!attackCooldownTimer)
-            {
-                attackCooldownTimer.Start(settings.nailCooldownTime);
-                attackTimer.Start(settings.nailDurationTime);
+        if (attackGraceTimer && !attackCooldownTimer)
+        {
+            attackCooldownTimer.Start(settings.nailCooldownTime);
+            attackTimer.Start(settings.nailDurationTime);
 
-                var weaponTransformAngle = 0;
-                if (inputDirection.y > 0) weaponTransformAngle = 90;
-                else if (inputDirection.y < 0 && !body.collisions.below) weaponTransformAngle = -90;
+            var weaponTransformAngle = 0;
+            if (inputDirection.y > 0) weaponTransformAngle = 90;
+            else if (inputDirection.y < 0 && !body.collisions.below) weaponTransformAngle = -90;
 
-                weaponTransform.localRotation = Quaternion.Euler(0, 0, weaponTransformAngle);
-                weaponTransform.gameObject.SetActive(true);
+            weaponTransform.localRotation = Quaternion.Euler(0, 0, weaponTransformAngle);
+            weaponTransform.gameObject.SetActive(true);
 
-                animator.SetTrigger("Slash");
-            }
-
+            animator.SetTrigger("Slash");
         }
 
         if (!attackTimer)
@@ -386,6 +387,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
         invincibleTimer.Update();
 
         attackCooldownTimer.Update();
+        attackGraceTimer.Update();
         attackTimer.Update();
     }
 

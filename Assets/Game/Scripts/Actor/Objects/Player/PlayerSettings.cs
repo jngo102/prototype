@@ -16,6 +16,7 @@ public class PlayerSettings : ScriptableObject
 
     [BoxGroup("Nail")] [Label("Cooldown (sec)")] public float nailCooldownTime = 0.3f;
     [BoxGroup("Nail")] [Label("Duration (sec)")] public float nailDurationTime = 0.1f;
+    [BoxGroup("Nail")] [Label("Grace Time (sec)")] public float nailGraceTime = 0.1f;
     [BoxGroup("Nail")] [Label("Recoil Time (sec)")] public float nailRecoilTime = 0.1f;
     [BoxGroup("Nail")] [Label("Recoil Velocity (units/sec)")] public float nailRecoilVelocity = 8f;
     [BoxGroup("Nail")] [Label("Recoil Jump Height (units)")] public float nailRecoilHeight = 2f;
