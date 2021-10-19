@@ -21,8 +21,9 @@ MonoBehaviour:
   jumpGraceTime: 0.1
   jumpCoyoteTime: 0.1
   jumpWallPushTime: 0.15
-  nailCooldownTime: 0.3
+  nailCooldownTime: 0.4
   nailDurationTime: 0.1
+  nailGraceTime: 0.1
   nailRecoilTime: 0.1
   nailRecoilVelocity: 8
   nailRecoilHeight: 2

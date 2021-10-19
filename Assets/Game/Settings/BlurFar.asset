@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BlurFar
   m_EditorClassIdentifier: 
   downsample: 1
-  blurSize: 0
-  blurIterations: 1
+  blurSize: 0.5
+  blurIterations: 2
   blurType: 0
   blurShader: {fileID: 4800000, guid: cb44561064a1944c2af2390438f77f66, type: 3}
