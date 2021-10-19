@@ -3475,6 +3475,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1252681281955757724, guid: 0e7adb20486d6479fb4d32c5c6f170b7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7409921939841548042, guid: 0e7adb20486d6479fb4d32c5c6f170b7, type: 3}
       propertyPath: m_Name
       value: Boss
