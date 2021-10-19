@@ -10,6 +10,7 @@ public class Boss : MonoBehaviour, IDamageHandler
     // Parts
     private ActorBody _body;
     private Animator _animator;
+    private SpriteRenderer _sprite;
     
     // Data
     private Player _player;
@@ -25,6 +26,7 @@ public class Boss : MonoBehaviour, IDamageHandler
     {
         _body = GetComponent<ActorBody>();
         _animator = GetComponent<Animator>();
+        _sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()
@@ -44,6 +46,7 @@ public class Boss : MonoBehaviour, IDamageHandler
             _velocity += Vector2.up * Random.Range(0.5f, 3);
             _velocity.Normalize();
             _velocity *= _jumpVelocity;
+            _sprite.flipX = _velocity.x > 0;
         }
 
         // Movement
