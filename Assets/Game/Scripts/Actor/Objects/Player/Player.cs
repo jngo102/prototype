@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
     [SerializeField]
-    private PlayerSettings settings;
+    private PlayerParams settings;
 
     // Player Input
     private InputManager input;

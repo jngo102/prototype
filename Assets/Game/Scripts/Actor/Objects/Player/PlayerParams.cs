@@ -1,7 +1,7 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-public class PlayerSettings : ScriptableObject
+public class PlayerParams : ScriptableObject
 {
     [BoxGroup("Movement")] [Label("Gravity (units/sec^2)")] public float gravity = -60f;
     [BoxGroup("Movement")] [Label("Velocity (units/sec)")] public float moveVelocity = 6f;

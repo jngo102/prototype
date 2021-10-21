@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63b255a94a0ea44fca9049c92d2eba27, type: 3}
-  m_Name: Player
+  m_Name: PlayerParams
   m_EditorClassIdentifier: 
   gravity: -60
   moveVelocity: 6
