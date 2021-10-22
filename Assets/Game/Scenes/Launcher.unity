@@ -7531,6 +7531,7 @@ GameObject:
   - component: {fileID: 1730213698}
   - component: {fileID: 1730213693}
   - component: {fileID: 1730213695}
+  - component: {fileID: 1730213697}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -7616,6 +7617,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5306af7f97f614aa69c374ed661e7941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1730213697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730213691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -73581967, guid: e743331561ef77147ae48cda9bcb8209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  previewOnGUI: 1
+  enableGUILayout: 0
+  drawStateLabels: 1
+  enableStateLabelsInBuilds: 0
+  GUITextureStateLabels: 0
+  GUITextStateLabels: 0
+  filterLabelsWithDistance: 0
+  maxLabelDistance: 10
+  controlMouseCursor: 1
+  labelScale: 1
 --- !u!114 &1730213698
 MonoBehaviour:
   m_ObjectHideFlags: 0
