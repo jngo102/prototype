@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Coals
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 7f56cb8dcdb15284dba40ffb51aabd43, type: 3}
+    totalSpriteSurfaceArea: 4962075
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 4068c200c8c1cbb40bf6caefa38eb373, type: 3}
+  - {fileID: 21300000, guid: 20749b70f9a5f6544a72bded70161b72, type: 3}
+  - {fileID: 21300000, guid: 7cb59ab16385e50438ffc2d9ad969a0b, type: 3}
+  - {fileID: 21300000, guid: 37a7a01275420cb409bfd741587e8691, type: 3}
+  - {fileID: 21300000, guid: 3a0a7532161fa754fadad16fe24d0763, type: 3}
+  - {fileID: 21300000, guid: 4fd95ab2aad078a458483a254295e564, type: 3}
+  - {fileID: 21300000, guid: 8722107343ab82044b79a72b75e29222, type: 3}
+  - {fileID: 21300000, guid: 3701c654ac76ba741a7f501397702614, type: 3}
+  - {fileID: 21300000, guid: a2bf266453449394481a4ce77f5fc50b, type: 3}
+  - {fileID: 21300000, guid: b14ddd6417c549044b8453d2ca03674e, type: 3}
+  - {fileID: 21300000, guid: 0b9b3f1581ba92e41b577a0cec7676f9, type: 3}
+  - {fileID: 21300000, guid: 51686125d5bc824488f70280115164fb, type: 3}
+  - {fileID: 21300000, guid: 1240e6169432e25428c873e22a1fe42c, type: 3}
+  - {fileID: 21300000, guid: af8664768980802478ebb8e35f86283d, type: 3}
+  - {fileID: 21300000, guid: c5d2bcd6155b1234b86b16dafb6097f6, type: 3}
+  - {fileID: 21300000, guid: d12362083ab38f946a07fdae29d0ddd6, type: 3}
+  - {fileID: 21300000, guid: 987b3e2817b049c4c85b3dacc42e248f, type: 3}
+  - {fileID: 21300000, guid: 6bf89fa8df42f8440bc4830c77e230ae, type: 3}
+  - {fileID: 21300000, guid: c83044e8f8468d54faab63726e40a75f, type: 3}
+  - {fileID: 21300000, guid: 4c421109eee1ade429ce62b9c21a6db0, type: 3}
+  - {fileID: 21300000, guid: 5627182946c517d4489a35c08a47bdb1, type: 3}
+  - {fileID: 21300000, guid: 86b800b9148cb2d46bb2d73c3a5fa609, type: 3}
+  - {fileID: 21300000, guid: 803fe0f984e56cc4ab949a2a73fbe28a, type: 3}
+  - {fileID: 21300000, guid: b3ef319af7f9fcd46bbaae6e4cd51bd9, type: 3}
+  - {fileID: 21300000, guid: 1011e7ea84ccc4c4a83692c01e60ac80, type: 3}
+  - {fileID: 21300000, guid: ae15affa877216d4d862799bfaa18227, type: 3}
+  - {fileID: 21300000, guid: 78aa658b7b1c0e0478562d0854ee5f0e, type: 3}
+  - {fileID: 21300000, guid: 76e4689b3b966e84ab19e6831bfce732, type: 3}
+  - {fileID: 21300000, guid: 74ebd3ad8e68b824a98b59e66670926d, type: 3}
+  - {fileID: 21300000, guid: 322fd30ecb5966a41a47f7be9707579b, type: 3}
+  - {fileID: 21300000, guid: 2900e89eae0e1b044b92396fde9354fe, type: 3}
+  - {fileID: 21300000, guid: 446f7ece5cb68704bb0ea67909b60fc7, type: 3}
+  - {fileID: 21300000, guid: 4b20773f8286193428939695f0ebcc64, type: 3}
+  - {fileID: 21300000, guid: 58ef744ff6a28934b959eea9053b6975, type: 3}
+  - {fileID: 21300000, guid: 5480519f7f31b3943b662b365a001cfb, type: 3}
+  - {fileID: 21300000, guid: d7ffd7bf622d6ee4e9da9d88d00a716a, type: 3}
+  - {fileID: 21300000, guid: 805e65cf7131bc545b0856991fcec9c9, type: 3}
+  - {fileID: 21300000, guid: 7a6639ef937e9e64992bdd5526e5b37a, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - coals_substance_1
+  - coals_heap_1
+  - coals_heap_3
+  - coals_pillar_2
+  - coals_heap_5
+  - coals_pillar_f_1
+  - coals_ccoal_4
+  - coals_candle_2
+  - coals_weaponsnuffer
+  - coals_ccoal_2
+  - coals_ccoal_10
+  - coals_heap_6
+  - coals_pillar_1
+  - coals_pillar_f_2
+  - coals_metalobject_1
+  - coals_floor_1
+  - coals_ash_1
+  - coals_heap_2
+  - coals_metalobject_2
+  - coals_heap_4
+  - coals_candlebroken_2
+  - coals_ccoal_3
+  - coals_ccoal_1
+  - coals_candlebroken_1
+  - coals_corpseshell_1
+  - coals_egg_1
+  - coals_candle_1
+  - coals_ceiling_1
+  - coals_candle_4
+  - coals_ccoal_7
+  - coals_pillar_3
+  - coals_hang_1
+  - coals_candle_3
+  - coals_ccoal_8
+  - coals_ccoal_6
+  - coals_corpseshell_2
+  - coals_ccoal_5
+  - coals_ccoal_9
+  m_RenderDataMap: {}
+  m_Tag: Coals
+  m_IsVariant: 0
