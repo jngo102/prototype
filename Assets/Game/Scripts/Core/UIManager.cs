@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
         return (T)_elements[elementType];
     }
 
-    private void Require(UIBehaviour element, object token, int state)
+    private CustomYieldInstruction Require(UIBehaviour element, object token, int state)
     {
         var relation = _relations.FirstOrDefault(x => x.element == element && x.token == token);
         if (relation == null && state != 0)
@@ -92,6 +92,8 @@ public class UIManager : MonoBehaviour
             _relationsIsDirty = true;
             relation.state = state;
         }
+
+        return new UIBehaviourYeldInstruction(element);
     }
 
     private void Update()
@@ -164,9 +166,9 @@ public class UIManager : MonoBehaviour
         public bool IsTransit { get; private set; }
 
         public T Get<T>() where T : UIBehaviour => ((IUIBehaviour)this).UI.Get<T>();
-        public void Require(object token, int state) { ((IUIBehaviour)this).UI.Require(this, token, state); }
-        public void Show() { Require(this, 1); }
-        public void Hide() { Require(this, 0); }
+        public CustomYieldInstruction Require(object token, int state) => ((IUIBehaviour)this).UI.Require(this, token, state);
+        public CustomYieldInstruction Show() => Require(this, 1);
+        public CustomYieldInstruction Hide() => Require(this, 0);
 
         // Protected template methods
 
@@ -194,5 +196,19 @@ public class UIManager : MonoBehaviour
             IsTransit = false;
             gameObject.SetActive(false);
         }
+    }
+
+    private class UIBehaviourYeldInstruction : CustomYieldInstruction
+    {
+        private UIBehaviour _behaviour;
+        private UIManager _manager;
+
+        public UIBehaviourYeldInstruction(UIBehaviour behaviour)
+        {
+            _behaviour = behaviour;
+            _manager = (behaviour as IUIBehaviour).UI;
+        }
+
+        public override bool keepWaiting => _behaviour.IsTransit || _manager._relationsIsDirty;
     }
 }

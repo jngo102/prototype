@@ -9,9 +9,9 @@ public class GameManager : MonoBehaviour
     private string _saveLevel;
     private string _saveEntrance;
 
-    public void Start()
+    private void Start()
     {
-        Main.Input.Player.Menu.performed += OnMenu;
+        Main.Input.Player.Menu.performed += OnPause;
 
         Main.Hook.PlayerDeath += OnPlayerDeath;
         Main.Hook.PlayerRecovery += OnPlayerRecovery;
@@ -22,11 +22,32 @@ public class GameManager : MonoBehaviour
     //
     // Public API
     //
-    public void StartUp(string levelName)
+
+    public void Play(string levelName)
     {
         Open(new OpenArgs() {
             name = levelName
         });
+    }
+
+    public YieldInstruction Stop()
+    {
+        return Close();
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        Main.Input.Player.Disable();
+    }
+
+    public void Unpause()
+    {
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+            Main.Input.Player.Enable();
+        }
     }
 
     //
@@ -45,9 +66,9 @@ public class GameManager : MonoBehaviour
     private void OnPlayerRecovery(PlayerRecoveryArgs message) => StartCoroutine(OnRestoreMessageCoroutine(message));
     private IEnumerator OnRestoreMessageCoroutine(PlayerRecoveryArgs message)
     {
-        yield return Main.UI.Get<UICurtain>().ShowAndWait();
+        yield return Main.UI.Get<UICurtain>().Show();
         FindObjectOfType<Player>().Setup(message.Position, 0, true);
-        yield return Main.UI.Get<UICurtain>().HideAndWait();
+        yield return Main.UI.Get<UICurtain>().Hide();
     }
 
     private void OnPlayerDeath()
@@ -67,9 +88,9 @@ public class GameManager : MonoBehaviour
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
-    private void OnMenu(InputAction.CallbackContext context)
+    private void OnPause(InputAction.CallbackContext context)
     {
-        Close();
+        Main.UI.Get<UIPause>().Show();
     }
 
     //
@@ -79,7 +100,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator OpenCoroutine(OpenArgs args)
     {
         Main.Input.Player.Enable();
-        yield return Main.UI.Get<UICurtain>().ShowAndWait();
+        yield return Main.UI.Get<UICurtain>().Show();
         yield return Main.Level.Load(args.name);
 
         // ... initialize level ...
@@ -111,7 +132,7 @@ public class GameManager : MonoBehaviour
         );
 
         Main.UI.Get<HUD>().Show();
-        yield return Main.UI.Get<UICurtain>().HideAndWait();
+        yield return Main.UI.Get<UICurtain>().Hide();
     }
 
     private struct OpenArgs
@@ -122,13 +143,17 @@ public class GameManager : MonoBehaviour
         public EntranceInfo entranceInfo;
     }
 
-    private void Close() => StartCoroutine(CloseCoroutine());
+    private YieldInstruction Close() => StartCoroutine(CloseCoroutine());
     private IEnumerator CloseCoroutine()
     {
-        Main.Input.Player.Disable();
-        yield return Main.UI.Get<UICurtain>().ShowAndWait();
+        Pause();
+        yield return Main.UI.Get<UICurtain>().Show();
         yield return Main.Level.Unload();
+        Unpause();
+
         Main.UI.Get<UIMenu>().Show();
-        yield return Main.UI.Get<UICurtain>().HideAndWait();
+        Main.UI.Get<UICurtain>().Hide();
+
+        Main.Input.Player.Disable();
     }
 }

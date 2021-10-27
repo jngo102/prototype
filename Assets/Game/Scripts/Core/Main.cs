@@ -29,9 +29,11 @@ public class Main : MonoBehaviour
     {
         UnloadAllScenesButThis();
 
+        // UI.Get<UIPause>().Show();
+
         var level = GetQueryLevel();
         if (level == null) UI.Get<UIMenu>().Show();
-        else Game.StartUp(level);
+        else Game.Play(level);
     }
 
     private void UnloadAllScenesButThis()
