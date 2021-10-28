@@ -1,0 +1,40 @@
+name: Android Build
+
+on:
+ workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Build
+      - name: Build with Unity
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: Android
+
+      # Output
+      - name: Upload Result
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build
+          path: build
