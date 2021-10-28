@@ -131,11 +131,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             }
         }
 
-        // var hasInput = velocity.sqrMagnitude > 0.01f
-                    // || inputAttackDown
-                    // || inputJumpDown;
-
-        /*
         if (velocity.sqrMagnitude < 0.01f)
         {
             if (input.Player.LookUp.triggered)
@@ -152,7 +147,6 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             inputLookDown = false;
 
         lookAt = (inputLookUp ? +1 : 0) + (inputLookDown ? -1 : 0);
-        */
     }
 
     private void OnAttack(InputAction.CallbackContext ctx)
