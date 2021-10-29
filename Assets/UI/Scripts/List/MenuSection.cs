@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public abstract class MenuSection : MonoBehaviour
 {
+    public Action Cancel;
+
     protected bool IsVisible => _visible;
 
     private bool _visible;
@@ -31,9 +34,12 @@ public abstract class MenuSection : MonoBehaviour
 
     protected virtual void LateUpdate()
     {
-        if (_visible && _source != null && _cancel.triggered && IsChildFocused())
+        if (_visible && _cancel.triggered && IsChildFocused())
         {
-            Pop();
+            if (_source != null)
+                Pop();
+            else
+                Cancel?.Invoke();
         }
 
         if (_visible)

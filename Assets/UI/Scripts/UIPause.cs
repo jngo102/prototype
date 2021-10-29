@@ -11,6 +11,11 @@ public class UIPause : UIManager.UIBehaviour
         return null;
     }
 
+    private void Start()
+    {
+        GetComponentInChildren<MenuSection>().Cancel += OnContinue;
+    }
+
     public void OnContinue()
     {
         Hide();
