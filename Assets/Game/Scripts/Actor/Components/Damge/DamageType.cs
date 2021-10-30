@@ -1,9 +1,8 @@
-// using System;
-
-// [Flags]
 public enum DamageType
 {
-    Slash  = 1 << 0,
-    Body   = 1 << 1,
-    Spikes = 1 << 2
+    Unknown = 0,
+    
+    Slash = 1,
+    Body = 2,
+    Spikes = 4
 }

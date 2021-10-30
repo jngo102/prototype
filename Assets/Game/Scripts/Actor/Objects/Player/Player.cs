@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ActorBody))]
-public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
+public class Player : MonoBehaviour, IPreHitHandler, IHitHandler, IPreDamageHandler, IDamageHandler, IInteractionHander
 {
     [SerializeField]
     private PlayerParams settings;
@@ -35,6 +35,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     private Vector2 forceDirection;
     private Vector2 finalDirection;
     private Vector2 recoilVelocity;
+    private DamageDirection attackDirection;
     private float wallJumpDir;
     private Vector2 velocity;
     private int lookAt;
@@ -307,10 +308,16 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
             attackCooldownTimer.Start(settings.nailCooldownTime);
             attackTimer.Start(settings.nailDurationTime);
 
-            var weaponTransformAngle = 0;
-            if (inputDirection.y > 0) weaponTransformAngle = 90;
-            else if (inputDirection.y < 0 && !body.collisions.below) weaponTransformAngle = -90;
+            // Define attack direction
+            if (inputDirection.y > 0) attackDirection = DamageDirection.Up;
+            else if (inputDirection.y < 0 && !body.collisions.below) attackDirection = DamageDirection.Down;
+            else if (heldTransform.localScale.x < 0) attackDirection = DamageDirection.Left;
+            else attackDirection = DamageDirection.Right;
 
+            // Rotate nail collider
+            var weaponTransformAngle = 0;
+            if (attackDirection == DamageDirection.Up) weaponTransformAngle = 90;
+            else if (attackDirection == DamageDirection.Down) weaponTransformAngle = -90;
             weaponTransform.localRotation = Quaternion.Euler(0, 0, weaponTransformAngle);
             weaponTransform.gameObject.SetActive(true);
 
@@ -319,6 +326,7 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
 
         if (!attackTimer)
         {
+            attackDirection = DamageDirection.Unknown;
             weaponTransform.gameObject.SetActive(false);
             animator.ResetTrigger("Slash");
         }
@@ -480,17 +488,23 @@ public class Player : MonoBehaviour, IHitHandler, IPreDamageHandler, IDamageHand
     // Hit & Damage
     //
 
+    public void OnPreHit(DamageInfo info)
+    {
+        if (info.Type == DamageType.Slash)
+            info.Direction = attackDirection;
+    }
+
     public void OnHit(DamageInfo info)
     {
         if (info.Recoil)
         {
             recoilTimer.Start(settings.nailRecoilTime);
 
-            var velocity = settings.CalcVelocity(settings.gravity, settings.nailRecoilTime, settings.nailRecoilHeight);
-
-            if (inputDirection.y > 0) recoilVelocity = velocity * Vector2.down;
-            else if (inputDirection.y < 0) recoilVelocity = velocity * Vector2.up;
-            else recoilVelocity.x = -heldTransform.localScale.x * settings.nailRecoilVelocity;
+            var direction = info.Direction.GetVector();
+            if (direction.y != 0)
+                recoilVelocity = -direction * settings.CalcVelocity(settings.gravity, settings.nailRecoilTime, settings.nailRecoilHeight);
+            else if (direction.x != 0)
+                recoilVelocity = -direction * settings.nailRecoilVelocity;
         }
     }
 

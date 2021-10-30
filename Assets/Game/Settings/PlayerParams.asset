@@ -25,7 +25,7 @@ MonoBehaviour:
   nailDurationTime: 0.1
   nailGraceTime: 0.1
   nailRecoilTime: 0.1
-  nailRecoilVelocity: 8
+  nailRecoilVelocity: 6
   nailRecoilHeight: 2
   damageInvincibleTime: 0.85
   damageRecoilTime: 0.1

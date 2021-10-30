@@ -44,6 +44,7 @@ public class DamageInfo
     public Actor Target { get; }
     
     public DamageType Type { get; set; }
+    public DamageDirection Direction { get; set; }
     public bool Canceled { get; private set; }
     public bool Recoil { get; set; } = true;
 
