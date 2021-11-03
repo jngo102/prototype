@@ -4,8 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class DamageCollider2D : MonoBehaviour
 {
-    private static Collider2D[] _sTemp = new Collider2D[4];
-    private static List<Collider2D> _sTempList = new List<Collider2D>();
+    private static List<Collider2D> _sTemp = new List<Collider2D>();
 
     [SerializeField]
     private LayerMask _layers;
@@ -44,17 +43,10 @@ public class DamageCollider2D : MonoBehaviour
 
         Physics2D.OverlapCollider(_collider, _filter, _sTemp);
 
-        _sTempList.Clear();
-
-        for (var i = 0; i < _sTemp.Length; i++)
+        for (var i = 0; i < _sTemp.Count; i++)
         {
             // [Collider]
             var collider = _sTemp[i];
-            if (collider == null)
-                continue;
-
-            _sTempList.Add(collider);
-            _sTemp[i] = null;
 
             if (_overlapped.Contains(collider) && _mode == TriggerMode.OnEnter)
                 continue;
@@ -74,7 +66,7 @@ public class DamageCollider2D : MonoBehaviour
         for (var i = 0; i < _overlapped.Count; i++)
         {
             var collider = _overlapped[i];
-            var colliderIsOverlapped = _sTempList.Contains(collider);
+            var colliderIsOverlapped = _sTemp.Contains(collider);
             if (colliderIsOverlapped == false)
                 _overlapped.RemoveAt(i--);
         }
