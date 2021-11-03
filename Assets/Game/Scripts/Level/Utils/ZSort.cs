@@ -1,20 +1,24 @@
 using UnityEngine;
 
 [ExecuteAlways]
-public class LevelOrderer : MonoBehaviour
+public class ZSort : MonoBehaviour
 {
-    private void Update()
+    #if UNITY_EDITOR
+    private void LateUpdate()
     {
-        var offset = 0;
+        if (Application.isPlaying)
+            return;
 
+        var offset = (int)transform.localPosition.z;
         Arrange(transform, ref offset);
     }
+    #endif
 
     private void Arrange(Transform transform, ref int offset)
     {
-        var pos = transform.transform.localPosition;
-        pos.z = offset;
-        transform.localPosition = pos;
+        var localPosition = transform.transform.localPosition;
+        localPosition.z = offset;
+        transform.localPosition = localPosition;
 
         var inner = 0;
         for (var i = transform.childCount-1; i >=0; i--)
