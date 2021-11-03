@@ -37,7 +37,7 @@ public class PlayerCameraController : MonoBehaviour
         _shaker.RestPositionOffset = _camera.transform.position;
     }
 
-    public void Shake(float magnitude = 1f)
+    public void Shake(float magnitude = 1f, float roughness = 2f, float fadeInTime = .1f, float fadeOutTime = .1f)
     {
         if (_shaker == null)
             return;
@@ -45,7 +45,7 @@ public class PlayerCameraController : MonoBehaviour
         if (_shaker.ShakeInstances.Count > 0)
             return;
 
-        _shaker.ShakeOnce(magnitude, 2f, .1f, .1f);
+        _shaker.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
     }
 
     public void Instant()

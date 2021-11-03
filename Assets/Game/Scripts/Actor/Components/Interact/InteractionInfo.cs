@@ -35,33 +35,33 @@ public class InteractionInfo
     public void Enter()
     {
         var sourceEnter = Source.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < sourceEnter.Count; i++)
+        for (var i = 0; i < sourceEnter.Length; i++)
             sourceEnter[i].OnInteractionEnter(this);
 
         var targetEnter = Target.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < targetEnter.Count; i++)
+        for (var i = 0; i < targetEnter.Length; i++)
             targetEnter[i].OnInteractionEnter(this);
     }
 
     public void Trigger()
     {
         var sourceTrigger = Source.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < sourceTrigger.Count; i++)
+        for (var i = 0; i < sourceTrigger.Length; i++)
             sourceTrigger[i].OnInteractionTrigger(this);
 
         var targetTrigger = Target.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < targetTrigger.Count; i++)
+        for (var i = 0; i < targetTrigger.Length; i++)
             targetTrigger[i].OnInteractionTrigger(this);
     }
 
     public void Exit()
     {
         var sourceExit = Source.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < sourceExit.Count; i++)
+        for (var i = 0; i < sourceExit.Length; i++)
             sourceExit[i].OnInteractionExit(this);
 
         var targetExit = Target.GetHandlers<IInteractionHander>();
-        for (var i = 0; i < targetExit.Count; i++)
+        for (var i = 0; i < targetExit.Length; i++)
             targetExit[i].OnInteractionExit(this);
     }
 }

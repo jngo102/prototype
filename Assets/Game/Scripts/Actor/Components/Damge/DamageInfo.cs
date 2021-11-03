@@ -67,11 +67,11 @@ public class DamageInfo
         // [Pre]
 
         var sourcePreHit = Source.GetHandlers<IPreHitHandler>();
-        for (var i = 0; i < sourcePreHit.Count; i++)
+        for (var i = 0; i < sourcePreHit.Length; i++)
             sourcePreHit[i].OnPreHit(this);
 
         var targetPreDamage = Target.GetHandlers<IPreDamageHandler>();
-        for (var i = 0; i < targetPreDamage.Count; i++)
+        for (var i = 0; i < targetPreDamage.Length; i++)
             targetPreDamage[i].OnPreDamage(this);
 
         // Cancel is available in any Pre- handler
@@ -81,21 +81,21 @@ public class DamageInfo
         // [Do]
 
         var sourceHit = Source.GetHandlers<IHitHandler>();
-        for (var i = 0; i < sourceHit.Count; i++)
+        for (var i = 0; i < sourceHit.Length; i++)
             sourceHit[i].OnHit(this);
 
         var targetDamage = Target.GetHandlers<IDamageHandler>();
-        for (var i = 0; i < targetDamage.Count; i++)
+        for (var i = 0; i < targetDamage.Length; i++)
             targetDamage[i].OnDamage(this);
 
         // [Post]
 
         var sourcePostHit = Source.GetHandlers<IPostHitHandler>();
-        for (var i = 0; i < sourcePostHit.Count; i++)
+        for (var i = 0; i < sourcePostHit.Length; i++)
             sourcePostHit[i].OnPostHit(this);
 
         var targetPostDamage = Target.GetHandlers<IPostDamageHandler>();
-        for (var i = 0; i < targetPostDamage.Count; i++)
+        for (var i = 0; i < targetPostDamage.Length; i++)
             targetPostDamage[i].OnPostDamage(this);
 
         Debug.Assert(!Canceled, "Damage can be canceled only in Pre- phase");

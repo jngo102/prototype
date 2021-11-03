@@ -3,7 +3,7 @@ using UnityEngine;
 [ExecuteAlways]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class LevelGeometry : Actor
+public class LevelGeometry : MonoBehaviour
 {
     //
     // Colors
@@ -43,11 +43,11 @@ public class LevelGeometry : Actor
 
     private void Start()
     {
-        _renderer.hideFlags = HideFlags.NotEditable;
+        _renderer.hideFlags = HideFlags.NotEditable | HideFlags.HideInInspector;
         _renderer.sprite = _sprite;
         _renderer.color = LevelGeometry.Solid;
 
-        _collider.hideFlags = HideFlags.NotEditable;
+        _collider.hideFlags = HideFlags.NotEditable | HideFlags.HideInInspector;
         _collider.isTrigger = false;
         
         if (Type != GeometryType.Spike)
@@ -62,6 +62,7 @@ public class LevelGeometry : Actor
             return;
 
         Round(transform);
+        Physics2D.SyncTransforms();
     }
 
     private void OnValidate()
