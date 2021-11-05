@@ -5,13 +5,15 @@ using UnityEngine.Animations;
 
 [RequireComponent(typeof(Actor))]
 [RequireComponent(typeof(PositionConstraint))]
-public class Obstacle : MonoBehaviour, IDamageHandler
+public class Obstacle : MonoBehaviour, IDamageHandler, ILoadable
 {
     [SerializeField]
     private LevelGeometry _geometry;
     private BoxCollider2D _collider;
 
     [SerializeField] private int _hitpoints = 3;
+
+    private SaveBool _isDestroyed;
 
     [BoxGroup("Effects")] [SerializeReference, TypePopup] private IEffect _onDamage;
     [BoxGroup("Effects")] [SerializeReference, TypePopup] private IEffect _onDestroy;
@@ -24,24 +26,38 @@ public class Obstacle : MonoBehaviour, IDamageHandler
         _collider.size = _geometry.transform.localScale;
     }
 
+    public void Load(ISave save)
+    {
+        _isDestroyed = save.GetBool(nameof(_isDestroyed), SaveMode.Persistent);
+
+        if (_isDestroyed.Value)
+        {
+            _geometry.gameObject.SetActive(false);
+            gameObject.SetActive(false);
+        }
+    }
+
     public void OnDamage(DamageInfo info)
     {
         _hitpoints -= 1;
 
         if (_hitpoints <= 0)
         {
-            // Disable Geometry & Collider
+            // Logic - Disable Geometry & Collider
             _geometry.gameObject.SetActive(false);
             _collider.enabled = false;
+            _isDestroyed.Write(true);
             
             // Run Animation
             _onDestroy?.Play();
             _piecies = GetComponentsInChildren<Rigidbody2D>();
             foreach (var piece in _piecies)
             {
+                piece.simulated = true;
                 piece.AddExplosionForce(10, info.Source.transform.position, 5, 0, ForceMode2D.Impulse);
                 piece.AddTorque(Random.value, ForceMode2D.Impulse);
             }
+            
         }
         else
         {
@@ -86,30 +102,5 @@ public class Obstacle : MonoBehaviour, IDamageHandler
         {
             constraint.constraintActive = false;
         }
-    }
-}
-
-public static class Rigidbody2DExtention
-{
-    public static void AddExplosionForce(this Rigidbody2D body, float explosionForce, Vector2 explosionPosition, float explosionRadius, float upwardsModifier = 0.0F, ForceMode2D mode = ForceMode2D.Force)
-    {
-        var explosionDir = body.position - explosionPosition;
-        var explosionDistance = explosionDir.magnitude;
-
-        // Normalize without computing magnitude again
-        if (upwardsModifier == 0)
-        {
-            explosionDir /= explosionDistance;
-        }
-        else
-        {
-            // From Rigidbody.AddExplosionForce doc:
-            // If you pass a non-zero value for the upwardsModifier parameter, the direction
-            // will be modified by subtracting that value from the Y component of the centre point.
-            explosionDir.y += upwardsModifier;
-            explosionDir.Normalize();
-        }
-
-        body.AddForce(Mathf.Lerp(0, explosionForce, (1 - explosionDistance/explosionRadius)) * explosionDir, mode);
     }
 }

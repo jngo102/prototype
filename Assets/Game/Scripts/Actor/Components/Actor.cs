@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using UnityEngine;
 
 // This marks root GameObject of the Actor
@@ -17,5 +17,25 @@ public sealed class Actor : MonoBehaviour
             value = _cache[type] = GetComponentsInChildren<T>();
 
         return (T[])value;
+    }
+
+    public string GetPath()
+    {
+        var names = new List<string>();
+        var cursor = transform;
+        do {
+            names.Add(cursor.name);
+            cursor = cursor.parent;
+        } while (cursor != null);
+
+        var result = new StringBuilder();
+        for (var i = names.Count-1; i > 0; i--)
+        {
+            result.Append(names[i]);
+            result.Append("/");
+        }
+
+        result.Append(names[0]);
+        return result.ToString();
     }
 }

@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    private string _saveLevel;
-    private string _saveEntrance;
+    private ISaveSlot _slot;
+    private SaveString _saveLevel;
+    private SaveString _saveEntrance;
 
     private void Start()
     {
@@ -25,6 +26,11 @@ public class GameManager : MonoBehaviour
 
     public void Play(string levelName)
     {
+        _slot = new PlayerPrefsSaveSlot(null);
+
+        _saveLevel = _slot.GetString("SaveLevel", SaveMode.Persistent, SaveScope.Global);
+        _saveEntrance = _slot.GetString("SaveEntrance", SaveMode.Persistent, SaveScope.Global);
+
         Open(new OpenArgs() {
             name = levelName
         });
@@ -55,7 +61,7 @@ public class GameManager : MonoBehaviour
     //
 
     private void OnPlayerTransit(PlayerTransitArgs message)
-    {
+    {        
         Open(new OpenArgs() {
             name = message.Level,
             entranceName = message.Entrance,
@@ -76,15 +82,17 @@ public class GameManager : MonoBehaviour
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
 
         Open(new OpenArgs() {
-            name = _saveLevel,
-            entranceName = _saveEntrance
+            name = _saveLevel.Value,
+            entranceName = _saveEntrance.Value
         });
     }
 
     private void OnPlayerSave(PlayerSaveArgs message)
     {
-        _saveLevel = Main.Level.Name;
-        _saveEntrance = message.Entrance;
+        _saveLevel.Write(Main.Level.Name);
+        _saveEntrance.Write(message.Entrance);
+        _slot.Flush();
+
         PlayerHealth.Instance.InstantlyRestoreAllHealth();
     }
 
@@ -106,8 +114,23 @@ public class GameManager : MonoBehaviour
         // ... initialize level ...
         if (_saveLevel == null)
         {
-            _saveLevel = args.name;
-            _saveEntrance = FindObjectOfType<Bench>()?.name;
+            _saveLevel.Write(args.name);
+            _saveEntrance.Write(FindObjectOfType<Bench>()?.name);
+        }
+
+        var actors = FindObjectsOfType<Actor>().ToList();
+        foreach (var actor in actors)
+        {
+            var items = actor.GetHandlers<ILoadable>();
+            if (items.Length > 0)
+            {
+                _slot.BeginScope(actor.GetPath());
+                
+                foreach (var item in items)
+                    item.Load(_slot);
+
+                _slot.EndScope();
+            }
         }
 
         // ... initialize player ...

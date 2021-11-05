@@ -176,7 +176,7 @@ public class LevelGate : MonoBehaviour, IEntrance
             names.Add(name);
         }
 
-        result.Add("<None>", string.Empty);
+        result.Add("(None)", string.Empty);
 
         if (_level != string.Empty && names.Contains(_level) == false)
             result.Add(_level, _level);
@@ -197,7 +197,7 @@ public class LevelGate : MonoBehaviour, IEntrance
             .Select(x => x.name)
             .ToList();
 
-        result.Add("<None>", string.Empty);
+        result.Add("(None)", string.Empty);
 
         if (_gate != string.Empty && names.Contains(_gate) == false)
         {
