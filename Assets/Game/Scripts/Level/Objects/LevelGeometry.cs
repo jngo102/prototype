@@ -39,6 +39,9 @@ public class LevelGeometry : MonoBehaviour
     {
         _renderer = GetComponent<SpriteRenderer>();
         _collider = GetComponent<BoxCollider2D>();
+
+        if (Application.isPlaying)
+            gameObject.AddComponent<Actor>();
     }
 
     private void Start()
@@ -52,6 +55,8 @@ public class LevelGeometry : MonoBehaviour
         
         if (Type != GeometryType.Spike)
             gameObject.layer = 3;
+        else
+            gameObject.layer = 6;
 
         OnValidate();
     }
