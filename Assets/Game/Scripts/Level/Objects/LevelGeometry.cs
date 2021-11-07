@@ -9,7 +9,7 @@ public class LevelGeometry : MonoBehaviour
     // Colors
     //
 
-    public static Color Solid => Parse("#83858C");
+    public static Color Solid => Parse("#000000");
     public static Color Gate => Parse("#F3A738");
     public static Color Spike => Parse("#D81159");
     public static Color Fragile => Parse("#DDC9B4");
