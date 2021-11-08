@@ -41,5 +41,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Areas/Tests/Scenes/Test_Boss.unity
     guid: 32439e33441334ca989ecfe4f20c34e0
+  - enabled: 1
+    path: Assets/Areas/Tests/Scenes/Test_KinematicProjectile.unity
+    guid: 59fa53eaabfca8e419cee53f2df8e76a
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 969680573d2cd8348b8130402f9b8917, type: 2}
